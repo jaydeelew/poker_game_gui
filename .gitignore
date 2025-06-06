@@ -75,3 +75,6 @@ wheels/
 # Logs
 *.log
 logs/ 
+
+# etc
+practice*.py
