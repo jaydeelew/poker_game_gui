@@ -23,7 +23,7 @@ class ViewModel(QObject):
     def __init__(self, model):
         super().__init__()
         self.model = model
-        # on_model_data_changed called when data_changed_signal received from model
+        # on_model_data_changed called when data_changed_signal received from Model
         self.model.data_changed_signal.connect(self.on_model_data_changed)
 
     # The str value emitted by view.user_input_signal
@@ -34,7 +34,7 @@ class ViewModel(QObject):
         # is responsible for updating the Model.
         self.model.update_data(value)
 
-    # The str value emitted by model.data_changed_signal
+    # The str value emitted by Model's data_changed_signal
     # is passed as arg to this function
     @Slot(str)
     def on_model_data_changed(self, value):
@@ -67,10 +67,10 @@ class View(QWidget):
         self.input = QLineEdit()
         # create a label widget
         self.label = QLabel("Enter text above")
-        # add the line edit and label to the layout
+        # add the line edit and label widgets to the layout
         self.layout.addWidget(self.input)
         self.layout.addWidget(self.label)
-        # set the layout to the QWidget
+        # set the layout for the QWidget
         self.setLayout(self.layout)
         # connect the textChanged signal of the QLineEdit
         # to the on_text_changed slot
@@ -94,7 +94,8 @@ if __name__ == "__main__":
     # - The viewmodel updates the model.
     # - The model notifies the viewmodel of changes.
     # - The viewmodel notifies the view of changes.
-    # Qt Application object creates the event loop
+    # - Qt Application object creates the event loop
+
     app = QApplication(sys.argv)
     model = Model()
     view_model = ViewModel(model)
