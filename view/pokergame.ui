@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>303</width>
+    <height>399</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <widget class="QListWidget" name="listWidgetPlayers">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>70</y>
-      <width>261</width>
+      <x>10</x>
+      <y>100</y>
+      <width>181</width>
       <height>201</height>
      </rect>
     </property>
@@ -32,7 +32,7 @@
      <rect>
       <x>200</x>
       <y>31</y>
-      <width>80</width>
+      <width>91</width>
       <height>31</height>
      </rect>
     </property>
@@ -43,9 +43,9 @@
    <widget class="QTextEdit" name="textEditPlayer">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>30</y>
-      <width>171</width>
+      <width>181</width>
       <height>31</height>
      </rect>
     </property>
@@ -53,21 +53,21 @@
    <widget class="QCheckBox" name="checkBoxDrawGame">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>30</y>
-      <width>81</width>
+      <x>200</x>
+      <y>220</y>
+      <width>91</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Draw?</string>
+     <string>5 Card Draw?</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonDelPlayer">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>90</y>
+      <x>200</x>
+      <y>100</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -76,18 +76,87 @@
      <string>Remove Player</string>
     </property>
    </widget>
+   <widget class="QLabel" name="labelEnterName">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>181</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Enter player's name below</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelGameStatus">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>310</y>
+      <width>181</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelSelectPlayer">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>181</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Select player(s) to remove</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonDeal">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>250</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>DEAL</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>303</width>
      <height>26</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuGame">
+    <property name="title">
+     <string>Game</string>
+    </property>
+    <addaction name="actionRestart"/>
+   </widget>
+   <addaction name="menuGame"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionRestart">
+   <property name="text">
+    <string>Restart</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

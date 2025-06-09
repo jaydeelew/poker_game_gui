@@ -8,15 +8,23 @@ class ViewModel(QObject):
     player_removed = Signal(str)  # Emitted when a player is removed
     error_occurred = Signal(str)  # Emitted when an error occurs
     game_state_changed = Signal(str)  # Emitted when game state changes
+    cards_dealt = Signal(bool)  # Emitted when cards are dealt
 
     def __init__(self):
         super().__init__()
         self._game = PokerGame()
-        self._game_state = "setup"  # setup, playing, finished
 
     @property
     def players(self):
         return [player._name for player in self._game._players_hands.keys()]
+
+    @Slot(str)
+    def check_game_state(self):
+        return self._game._game_state
+
+    @Slot(str)
+    def set_game_status_label(self, text):
+        return self._game.report_game_state(text)
 
     @Slot(bool)
     def set_game_of_draw(self, game_of_draw: bool):
@@ -40,7 +48,7 @@ class ViewModel(QObject):
 
         # Update game state if we have enough players
         if len(self.players) >= 2:
-            self._game_state = "ready"
+            self._game.set_game_state("ready")
             self.game_state_changed.emit("Game is ready to start")
 
         return True
@@ -60,7 +68,7 @@ class ViewModel(QObject):
 
             # Update game state if we don't have enough players
             if len(self.players) < 2:
-                self._game_state = "setup"
+                self._game.set_game_state("setup")
                 self.game_state_changed.emit("Need at least 2 players to start")
             return True
         else:
@@ -68,16 +76,17 @@ class ViewModel(QObject):
         return False
 
     @Slot()
-    def start_game(self) -> bool:
-        """Start the game if we have enough players."""
+    def deal(self):
         if len(self.players) < 2:
             self.error_occurred.emit("Need at least 2 players to start")
-            return False
+            return
 
-        if self._game_state != "ready":
+        if self._game.status != "ready":
             self.error_occurred.emit("Game is not ready to start")
-            return False
+            return
 
-        self._game_state = "playing"
+        self._game.deal_cards(5)
+
+        self._game.set_game_state("playing")
         self.game_state_changed.emit("Game started")
         return True

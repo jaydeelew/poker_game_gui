@@ -1,6 +1,7 @@
 from .hand import Hand
 from .deck import Deck
 from .player import Player
+from .card import Card
 
 
 class PokerGame:
@@ -22,6 +23,16 @@ class PokerGame:
         self._draw_game = False
         self._deck: Deck = Deck()
         self._players_hands: dict[Player, Hand | None] = {}
+        # Game setup in progress, Game is Ready to start, Game is active, Game is finished
+        self._game_state = "setup"  # setup, ready, playing, finished
+
+    def set_game_state(self, text):
+        if len(self._players_hands) >= 2:
+            self._game_state = text
+
+    @property
+    def status(self):
+        return self._game_state
 
     def set_draw_game(self, draw_game: bool) -> None:
         self._draw_game = draw_game
@@ -51,19 +62,13 @@ class PokerGame:
 
                 case Hand.STRAIGHT_FLUSH:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    print(
-                        "Straight Flush:", ", ".join(str(card) for card in sorted_cards)
-                    )
+                    print("Straight Flush:", ", ".join(str(card) for card in sorted_cards))
 
                 case Hand.FOUR_OF_A_KIND:
                     # Group four matching cards first, then the remaining card
                     four_value = hand._hand_value[1]
-                    four_cards = [
-                        card for card in hand._cards if card.rank == four_value
-                    ]
-                    other_card = [
-                        card for card in hand._cards if card.rank != four_value
-                    ]
+                    four_cards = [card for card in hand._cards if card.rank == four_value]
+                    other_card = [card for card in hand._cards if card.rank != four_value]
                     print(
                         "Four of a Kind:",
                         ", ".join(str(card) for card in four_cards + other_card),
@@ -73,12 +78,8 @@ class PokerGame:
                     # Group three matching cards first, then the pair
                     three_value = hand._hand_value[1]
                     pair_value = hand._hand_value[2]
-                    three_cards = [
-                        card for card in hand._cards if card.rank == three_value
-                    ]
-                    pair_cards = [
-                        card for card in hand._cards if card.rank == pair_value
-                    ]
+                    three_cards = [card for card in hand._cards if card.rank == three_value]
+                    pair_cards = [card for card in hand._cards if card.rank == pair_value]
                     print(
                         "Full House:",
                         ", ".join(str(card) for card in three_cards + pair_cards),
@@ -86,9 +87,7 @@ class PokerGame:
 
                 case Hand.FLUSH:
                     # Sort by value since they're all the same suit
-                    sorted_cards = sorted(
-                        hand._cards, key=lambda x: x.rank, reverse=True
-                    )
+                    sorted_cards = sorted(hand._cards, key=lambda x: x.rank, reverse=True)
                     print("Flush:", ", ".join(str(card) for card in sorted_cards))
 
                 case Hand.STRAIGHT:
@@ -97,9 +96,7 @@ class PokerGame:
 
                 case Hand.THREE_OF_A_KIND:
                     three_value = hand._hand_value[1]
-                    three_cards = [
-                        card for card in hand._cards if card.rank == three_value
-                    ]
+                    three_cards = [card for card in hand._cards if card.rank == three_value]
                     other_cards = sorted(
                         [card for card in hand._cards if card.rank != three_value],
                         key=lambda x: x.rank,
@@ -113,30 +110,21 @@ class PokerGame:
                 case Hand.TWO_PAIR:
                     high_pair = hand._hand_value[1]
                     low_pair = hand._hand_value[2]
-                    high_pair_cards = [
-                        card for card in hand._cards if card.rank == high_pair
-                    ]
-                    low_pair_cards = [
-                        card for card in hand._cards if card.rank == low_pair
-                    ]
+                    high_pair_cards = [card for card in hand._cards if card.rank == high_pair]
+                    low_pair_cards = [card for card in hand._cards if card.rank == low_pair]
                     other_card = [
-                        card
-                        for card in hand._cards
-                        if card.rank not in (high_pair, low_pair)
+                        card for card in hand._cards if card.rank not in (high_pair, low_pair)
                     ]
                     print(
                         "Two Pair:",
                         ", ".join(
-                            str(card)
-                            for card in high_pair_cards + low_pair_cards + other_card
+                            str(card) for card in high_pair_cards + low_pair_cards + other_card
                         ),
                     )
 
                 case Hand.ONE_PAIR:
                     pair_value = hand._hand_value[1]
-                    pair_cards = [
-                        card for card in hand._cards if card.rank == pair_value
-                    ]
+                    pair_cards = [card for card in hand._cards if card.rank == pair_value]
                     other_cards = sorted(
                         [card for card in hand._cards if card.rank != pair_value],
                         key=lambda x: x.rank,
@@ -148,9 +136,7 @@ class PokerGame:
                     )
 
                 case Hand.HIGH_CARD:
-                    sorted_cards = sorted(
-                        hand._cards, key=lambda x: x.rank, reverse=True
-                    )
+                    sorted_cards = sorted(hand._cards, key=lambda x: x.rank, reverse=True)
                     print("High Card:", ", ".join(str(card) for card in sorted_cards))
 
     def show_players_hands_hand(self, player):
@@ -167,9 +153,7 @@ class PokerGame:
             input("Press Enter when you are ready to see your cards ...")
             self.show_hand(player)
             while True:
-                ans = input(
-                    f"\n{player.name}, how many cards are you trading in (0-3)? "
-                )
+                ans = input(f"\n{player.name}, how many cards are you trading in (0-3)? ")
                 try:
                     num_cards_trading = int(ans)
                 except ValueError:
@@ -186,9 +170,7 @@ class PokerGame:
 
             curr_num_cards = 0
             while curr_num_cards < num_cards_trading:
-                trade = input(
-                    "Enter the card you are trading (e.g. Two of Hearts): "
-                ).split()
+                trade = input("Enter the card you are trading (e.g. Two of Hearts): ").split()
 
                 # Get the player's hand.
                 player_hand = self._players_hands[player]
@@ -216,8 +198,6 @@ class PokerGame:
             print("\nYour final hand:")
             self.show_hand(player)
             input("\nPress Enter when you are done seeing your cards ...")
-            # Clear terminal screen
-            os.system("cls" if os.name == "nt" else "clear")
 
     def winners(self) -> set:
         curr_winners = set()
