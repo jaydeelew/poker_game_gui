@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QListWidget" name="listWidgetPlayers">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -23,8 +23,11 @@
       <height>201</height>
      </rect>
     </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::MultiSelection</enum>
+    </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="pushButtonAddPlayer">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -37,7 +40,7 @@
      <string>Add Player</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="textEditPlayer">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -47,14 +50,30 @@
      </rect>
     </property>
    </widget>
-   <widget class="QTableWidget" name="tableWidget">
+   <widget class="QCheckBox" name="checkBoxDrawGame">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>220</y>
-      <width>256</width>
-      <height>192</height>
+      <x>360</x>
+      <y>30</y>
+      <width>81</width>
+      <height>21</height>
      </rect>
+    </property>
+    <property name="text">
+     <string>Draw?</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonDelPlayer">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>90</y>
+      <width>93</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Remove Player</string>
     </property>
    </widget>
   </widget>
@@ -64,7 +83,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>19</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

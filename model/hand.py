@@ -1,5 +1,5 @@
 from collections import Counter
-from card import Card
+from .card import Card
 
 
 class Hand:
@@ -111,7 +111,9 @@ class Hand:
                     return self._hand_value[1] == other._hand_value[1]
                 # If hand type is not recognized, raise an error.
                 case _:
-                    raise ValueError("Invalid hand value comparison - unexpected hand type")
+                    raise ValueError(
+                        "Invalid hand value comparison - unexpected hand type"
+                    )
         else:
             return False
 
@@ -194,7 +196,9 @@ class Hand:
                     return False
                 # If hand type is not recognized, raise an error.
                 case _:
-                    raise ValueError("Invalid hand value comparison - unexpected hand type")
+                    raise ValueError(
+                        "Invalid hand value comparison - unexpected hand type"
+                    )
         else:
             return self._hand_value[0] < other._hand_value[0]
 
@@ -258,7 +262,9 @@ class Hand:
         # Pair places its value at index 1, and the other three value in descending order at
         # indexes 2-4.
         # and the remaining card in the third int value.
-        def result_tuple(hand: int) -> tuple[int, int, int, int, int, int]:  # type:ignore
+        def result_tuple(
+            hand: int,
+        ) -> tuple[int, int, int, int, int, int]:  # type:ignore
             match hand:
                 case self.ROYAL_FLUSH:
                     return (self.ROYAL_FLUSH, -1, -1, -1, -1, -1)

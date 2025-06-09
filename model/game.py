@@ -1,6 +1,6 @@
-from hand import Hand
-from deck import Deck
-from player import Player
+from .hand import Hand
+from .deck import Deck
+from .player import Player
 
 
 class PokerGame:
@@ -11,62 +11,39 @@ class PokerGame:
     Supports both 5-card draw and 5-card stud variants.
 
     Attributes:
-        _draw (bool): True if playing 5-card draw, False for 5-card stud
+        _draw_game (bool): True if playing 5-card draw, False for 5-card stud
         _num_players (int): Number of players in the game
         _deck (Deck): The game's deck of cards
-        _players (dict[Player, Hand]): Maps players to their poker hands
+        _players_hands (dict[Player, Hand]): Maps players to their poker hands
+        or None if cards have not been dealt
     """
 
     def __init__(self) -> None:
-        self._draw = False
-        self._num_players = 0
-        while True:
-            ans = input("Would you like to play 5 card draw? y/n: ")
-            if ans in {"y", "Y", "n", "N"}:
-                ans = ans.lower()
-                if ans == "y":
-                    self._draw = True
-                break
-            else:
-                print("You must enter y or n")
-                input("Press Enter to continue...")
-
-        while True:
-            ans = input("Enter the number of players: ")
-            try:
-                self._num_players = int(ans)
-            except ValueError:
-                print("Invalid input. Please enter a number")
-                input("Press Enter to continue...")
-                continue
-
-            if self._draw and self._num_players > 6:
-                print("There must be 2 to 6 players in a game of 5 card draw\n")
-                continue
-            elif self._num_players > 10:
-                print("There must be 2 to 10 players in a game of 5 card stud\n")
-                continue
-
-            break
-
+        self._draw_game = False
         self._deck: Deck = Deck()
-        self._players: dict[Player, Hand | None] = {}
-        self.add_players(self._num_players)
+        self._players_hands: dict[Player, Hand | None] = {}
 
-    def add_players(self, num_players: int) -> None:
-        for _ in range(num_players):
-            name = input("Enter a player's name: ")
-            self._players[Player(name)] = None
+    def set_draw_game(self, draw_game: bool) -> None:
+        self._draw_game = draw_game
+
+    def add_player(self, name: str):
+        self._players_hands[Player(name)] = None
+
+    def remove_player(self, name: str):
+        # Find the Player object with this name
+        for player in self._players_hands.keys():
+            if player.name == name:
+                del self._players_hands[player]
 
     def deal_cards(self, hand_size: int) -> None:
-        for player in self._players:
+        for player in self._players_hands:
             hand = self._deck.random_deal(hand_size)
-            self._players[player] = Hand(hand)
+            self._players_hands[player] = Hand(hand)
 
     def show_hand(self, player: Player) -> None:
-        hand = self._players[player]
+        hand = self._players_hands[player]
         if hand:  # Check if hand exists
-            print(f"\n{player._name} with ", end="")
+            print(f"\n{player.name} with ", end="")
             match hand._hand_value[0]:
                 case Hand.ROYAL_FLUSH:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
@@ -74,28 +51,44 @@ class PokerGame:
 
                 case Hand.STRAIGHT_FLUSH:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    print("Straight Flush:", ", ".join(str(card) for card in sorted_cards))
+                    print(
+                        "Straight Flush:", ", ".join(str(card) for card in sorted_cards)
+                    )
 
                 case Hand.FOUR_OF_A_KIND:
                     # Group four matching cards first, then the remaining card
                     four_value = hand._hand_value[1]
-                    four_cards = [card for card in hand._cards if card.rank == four_value]
-                    other_card = [card for card in hand._cards if card.rank != four_value]
+                    four_cards = [
+                        card for card in hand._cards if card.rank == four_value
+                    ]
+                    other_card = [
+                        card for card in hand._cards if card.rank != four_value
+                    ]
                     print(
-                        "Four of a Kind:", ", ".join(str(card) for card in four_cards + other_card)
+                        "Four of a Kind:",
+                        ", ".join(str(card) for card in four_cards + other_card),
                     )
 
                 case Hand.FULL_HOUSE:
                     # Group three matching cards first, then the pair
                     three_value = hand._hand_value[1]
                     pair_value = hand._hand_value[2]
-                    three_cards = [card for card in hand._cards if card.rank == three_value]
-                    pair_cards = [card for card in hand._cards if card.rank == pair_value]
-                    print("Full House:", ", ".join(str(card) for card in three_cards + pair_cards))
+                    three_cards = [
+                        card for card in hand._cards if card.rank == three_value
+                    ]
+                    pair_cards = [
+                        card for card in hand._cards if card.rank == pair_value
+                    ]
+                    print(
+                        "Full House:",
+                        ", ".join(str(card) for card in three_cards + pair_cards),
+                    )
 
                 case Hand.FLUSH:
                     # Sort by value since they're all the same suit
-                    sorted_cards = sorted(hand._cards, key=lambda x: x.rank, reverse=True)
+                    sorted_cards = sorted(
+                        hand._cards, key=lambda x: x.rank, reverse=True
+                    )
                     print("Flush:", ", ".join(str(card) for card in sorted_cards))
 
                 case Hand.STRAIGHT:
@@ -104,7 +97,9 @@ class PokerGame:
 
                 case Hand.THREE_OF_A_KIND:
                     three_value = hand._hand_value[1]
-                    three_cards = [card for card in hand._cards if card.rank == three_value]
+                    three_cards = [
+                        card for card in hand._cards if card.rank == three_value
+                    ]
                     other_cards = sorted(
                         [card for card in hand._cards if card.rank != three_value],
                         key=lambda x: x.rank,
@@ -118,52 +113,63 @@ class PokerGame:
                 case Hand.TWO_PAIR:
                     high_pair = hand._hand_value[1]
                     low_pair = hand._hand_value[2]
-                    high_pair_cards = [card for card in hand._cards if card.rank == high_pair]
-                    low_pair_cards = [card for card in hand._cards if card.rank == low_pair]
+                    high_pair_cards = [
+                        card for card in hand._cards if card.rank == high_pair
+                    ]
+                    low_pair_cards = [
+                        card for card in hand._cards if card.rank == low_pair
+                    ]
                     other_card = [
-                        card for card in hand._cards if card.rank not in (high_pair, low_pair)
+                        card
+                        for card in hand._cards
+                        if card.rank not in (high_pair, low_pair)
                     ]
                     print(
                         "Two Pair:",
                         ", ".join(
-                            str(card) for card in high_pair_cards + low_pair_cards + other_card
+                            str(card)
+                            for card in high_pair_cards + low_pair_cards + other_card
                         ),
                     )
 
                 case Hand.ONE_PAIR:
                     pair_value = hand._hand_value[1]
-                    pair_cards = [card for card in hand._cards if card.rank == pair_value]
+                    pair_cards = [
+                        card for card in hand._cards if card.rank == pair_value
+                    ]
                     other_cards = sorted(
                         [card for card in hand._cards if card.rank != pair_value],
                         key=lambda x: x.rank,
                         reverse=True,
                     )
-                    print("One Pair:", ", ".join(str(card) for card in pair_cards + other_cards))
+                    print(
+                        "One Pair:",
+                        ", ".join(str(card) for card in pair_cards + other_cards),
+                    )
 
                 case Hand.HIGH_CARD:
-                    sorted_cards = sorted(hand._cards, key=lambda x: x.rank, reverse=True)
+                    sorted_cards = sorted(
+                        hand._cards, key=lambda x: x.rank, reverse=True
+                    )
                     print("High Card:", ", ".join(str(card) for card in sorted_cards))
 
-    def show_players_hand(self, player):
+    def show_players_hands_hand(self, player):
         self.show_hand(player)
 
     def show_all_hands(self) -> None:
-        for player in self._players.keys():
-            print(f"\n{player._name}, please have a seat")
-            input("Press Enter when you are ready to see your cards ...")
-            self.show_hand(player)
-            input("Press Enter when you have are done seeing your cards ...")
-            # Clear terminal screen
-            os.system("cls" if os.name == "nt" else "clear")
+        for player in self._players_hands.keys():
+            pass
 
     def draw_cards(self) -> None:
-        for player in self._players:
+        for player in self._players_hands:
             num_cards_trading = 0
-            print(f"\n{player._name}, please have a seat")
+            print(f"\n{player.name}, please have a seat")
             input("Press Enter when you are ready to see your cards ...")
             self.show_hand(player)
             while True:
-                ans = input(f"\n{player._name}, how many cards are you trading in (0-3)? ")
+                ans = input(
+                    f"\n{player.name}, how many cards are you trading in (0-3)? "
+                )
                 try:
                     num_cards_trading = int(ans)
                 except ValueError:
@@ -180,14 +186,16 @@ class PokerGame:
 
             curr_num_cards = 0
             while curr_num_cards < num_cards_trading:
-                trade = input("Enter the card you are trading (e.g. Two of Hearts): ").split()
+                trade = input(
+                    "Enter the card you are trading (e.g. Two of Hearts): "
+                ).split()
 
                 # Get the player's hand.
-                player_hand = self._players[player]
+                player_hand = self._players_hands[player]
 
                 # Check if player has a valid hand.
                 if player_hand is None:
-                    print(f"Player {player._name} has no hand")
+                    print(f"Player {player.name} has no hand")
                     continue
 
                 # Is trade is a valid card?
@@ -199,7 +207,7 @@ class PokerGame:
                         player_hand.update_best_hand()
                         curr_num_cards += 1
                     else:
-                        print(f"{player._name} does not have a {trade[0]} of {trade[2]}")
+                        print(f"{player.name} does not have a {trade[0]} of {trade[2]}")
                         input("Press Enter to continue ...")
                 else:
                     print("Invalid card. Please enter a valid card value and suit.")
@@ -215,7 +223,7 @@ class PokerGame:
         curr_winners = set()
         curr_winning_hand = None
 
-        for player, hand in self._players.items():
+        for player, hand in self._players_hands.items():
             # Skip if current hand is None
             if hand is None:
                 continue

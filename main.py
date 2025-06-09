@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 from PySide6.QtWidgets import QApplication
 from view.mainwindow import MainWindow
 import sys
@@ -10,5 +12,5 @@ def main():
     sys.exit(app.exec())
 
 
-if __name__ == '__main__':
-    main() 
+if __name__ == "__main__":
+    main()
