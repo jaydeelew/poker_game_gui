@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>303</width>
-    <height>399</height>
+    <height>454</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="selectionMode">
-     <enum>QAbstractItemView::MultiSelection</enum>
+     <enum>QAbstractItemView::SingleSelection</enum>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonAddPlayer">
@@ -93,8 +93,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>310</y>
-      <width>181</width>
+      <y>390</y>
+      <width>281</width>
       <height>16</height>
      </rect>
     </property>
@@ -112,10 +112,10 @@
      </rect>
     </property>
     <property name="text">
-     <string>Select player(s) to remove</string>
+     <string>Select a player to remove</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonDeal">
+   <widget class="QPushButton" name="pushButtonPlayGame">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -126,11 +126,29 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>16</pointsize>
+      <pointsize>14</pointsize>
      </font>
     </property>
     <property name="text">
-     <string>DEAL</string>
+     <string>PLAY</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonRevealWinner">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>310</y>
+      <width>281</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Reveal Winner</string>
     </property>
    </widget>
   </widget>

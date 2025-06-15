@@ -26,13 +26,16 @@ class PokerGame:
         # Game setup in progress, Game is Ready to start, Game is active, Game is finished
         self._game_state = "setup"  # setup, ready, playing, finished
 
-    def set_game_state(self, text):
-        if len(self._players_hands) >= 2:
-            self._game_state = text
-
     @property
-    def status(self):
+    def state(self) -> str:
         return self._game_state
+
+    @state.setter
+    def state(self, text: str) -> bool:
+        if text in ["setup", "ready", "playing", "reveal", "finished"]:
+            self._game_state = text
+        else:
+            raise ValueError("Trying to set invalid state")
 
     def set_draw_game(self, draw_game: bool) -> None:
         self._draw_game = draw_game
@@ -46,33 +49,34 @@ class PokerGame:
             if player.name == name:
                 del self._players_hands[player]
 
+    def get_player(self, name: str) -> Player:
+        for player in self._players_hands.keys():
+            if player.name == name:
+                return player
+
     def deal_cards(self, hand_size: int) -> None:
         for player in self._players_hands:
             hand = self._deck.random_deal(hand_size)
             self._players_hands[player] = Hand(hand)
 
-    def show_hand(self, player: Player) -> None:
+    def show_hand(self, player: Player) -> str:
         hand = self._players_hands[player]
         if hand:  # Check if hand exists
-            print(f"\n{player.name} with ", end="")
             match hand._hand_value[0]:
                 case Hand.ROYAL_FLUSH:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    print("Royal Flush:", ", ".join(str(card) for card in sorted_cards))
+                    return f"Royal Flush: {', '.join(str(card) for card in sorted_cards)}"
 
                 case Hand.STRAIGHT_FLUSH:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    print("Straight Flush:", ", ".join(str(card) for card in sorted_cards))
+                    return f"Straight Flush: {', '.join(str(card) for card in sorted_cards)}"
 
                 case Hand.FOUR_OF_A_KIND:
                     # Group four matching cards first, then the remaining card
                     four_value = hand._hand_value[1]
                     four_cards = [card for card in hand._cards if card.rank == four_value]
                     other_card = [card for card in hand._cards if card.rank != four_value]
-                    print(
-                        "Four of a Kind:",
-                        ", ".join(str(card) for card in four_cards + other_card),
-                    )
+                    return f"Four of a Kind: {', '.join(str(card) for card in four_cards + other_card)}"
 
                 case Hand.FULL_HOUSE:
                     # Group three matching cards first, then the pair
@@ -80,19 +84,18 @@ class PokerGame:
                     pair_value = hand._hand_value[2]
                     three_cards = [card for card in hand._cards if card.rank == three_value]
                     pair_cards = [card for card in hand._cards if card.rank == pair_value]
-                    print(
-                        "Full House:",
-                        ", ".join(str(card) for card in three_cards + pair_cards),
+                    return (
+                        f"Full House: {', '.join(str(card) for card in three_cards + pair_cards)}"
                     )
 
                 case Hand.FLUSH:
                     # Sort by value since they're all the same suit
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank, reverse=True)
-                    print("Flush:", ", ".join(str(card) for card in sorted_cards))
+                    return f"Flush: {', '.join(str(card) for card in sorted_cards)}"
 
                 case Hand.STRAIGHT:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    print("Straight:", ", ".join(str(card) for card in sorted_cards))
+                    return f"Straight: {', '.join(str(card) for card in sorted_cards)}"
 
                 case Hand.THREE_OF_A_KIND:
                     three_value = hand._hand_value[1]
@@ -102,10 +105,7 @@ class PokerGame:
                         key=lambda x: x.rank,
                         reverse=True,
                     )
-                    print(
-                        "Three of a Kind:",
-                        ", ".join(str(card) for card in three_cards + other_cards),
-                    )
+                    return f"Three of a Kind: {', '.join(str(card) for card in three_cards + other_cards)}"
 
                 case Hand.TWO_PAIR:
                     high_pair = hand._hand_value[1]
@@ -115,12 +115,7 @@ class PokerGame:
                     other_card = [
                         card for card in hand._cards if card.rank not in (high_pair, low_pair)
                     ]
-                    print(
-                        "Two Pair:",
-                        ", ".join(
-                            str(card) for card in high_pair_cards + low_pair_cards + other_card
-                        ),
-                    )
+                    return f"Two Pair: {', '.join(str(card) for card in high_pair_cards + low_pair_cards + other_card)}"
 
                 case Hand.ONE_PAIR:
                     pair_value = hand._hand_value[1]
@@ -130,14 +125,11 @@ class PokerGame:
                         key=lambda x: x.rank,
                         reverse=True,
                     )
-                    print(
-                        "One Pair:",
-                        ", ".join(str(card) for card in pair_cards + other_cards),
-                    )
+                    return f"One Pair: {', '.join(str(card) for card in pair_cards + other_cards)}"
 
                 case Hand.HIGH_CARD:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank, reverse=True)
-                    print("High Card:", ", ".join(str(card) for card in sorted_cards))
+                    return f"High Card: {', '.join(str(card) for card in sorted_cards)}"
 
     def show_players_hands_hand(self, player):
         self.show_hand(player)
@@ -219,3 +211,9 @@ class PokerGame:
                 curr_winners.add(player)
 
         return curr_winners
+
+    def restart_game(self) -> None:
+        self._draw_game = False
+        self._deck = Deck()  # Create a new deck
+        self._players_hands.clear()  # Clear all players and hands
+        self._game_state = "setup"  # Reset game state

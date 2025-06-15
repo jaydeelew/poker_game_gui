@@ -4,11 +4,13 @@ from model.game import PokerGame
 
 class ViewModel(QObject):
     # Signals
-    player_added = Signal(str)  # Emitted when a player is added
-    player_removed = Signal(str)  # Emitted when a player is removed
-    error_occurred = Signal(str)  # Emitted when an error occurs
-    game_state_changed = Signal(str)  # Emitted when game state changes
-    cards_dealt = Signal(bool)  # Emitted when cards are dealt
+    player_added = Signal(str)
+    player_removed = Signal(str)
+    show_hand_requested = Signal(str)
+    winner_declared = Signal(str)
+    winner_set_requested = Signal(set)
+    game_state_changed = Signal(str)
+    error_occurred = Signal(str)
 
     def __init__(self):
         super().__init__()
@@ -19,12 +21,12 @@ class ViewModel(QObject):
         return [player._name for player in self._game._players_hands.keys()]
 
     @Slot(str)
-    def check_game_state(self):
-        return self._game._game_state
+    def get_game_state(self):
+        return self._game.state
 
     @Slot(str)
-    def set_game_status_label(self, text):
-        return self._game.report_game_state(text)
+    def set_game_state(self, text) -> bool:
+        self._game.state = text
 
     @Slot(bool)
     def set_game_of_draw(self, game_of_draw: bool):
@@ -48,8 +50,8 @@ class ViewModel(QObject):
 
         # Update game state if we have enough players
         if len(self.players) >= 2:
-            self._game.set_game_state("ready")
-            self.game_state_changed.emit("Game is ready to start")
+            self._game.state = "ready"
+            self.game_state_changed.emit("Game is ready to play")
 
         return True
 
@@ -68,7 +70,7 @@ class ViewModel(QObject):
 
             # Update game state if we don't have enough players
             if len(self.players) < 2:
-                self._game.set_game_state("setup")
+                self._game.state = "setup"
                 self.game_state_changed.emit("Need at least 2 players to start")
             return True
         else:
@@ -76,17 +78,48 @@ class ViewModel(QObject):
         return False
 
     @Slot()
-    def deal(self):
+    def deal_cards(self):
         if len(self.players) < 2:
             self.error_occurred.emit("Need at least 2 players to start")
             return
 
-        if self._game.status != "ready":
+        if self._game.state != "ready":
             self.error_occurred.emit("Game is not ready to start")
             return
 
         self._game.deal_cards(5)
 
-        self._game.set_game_state("playing")
+        self._game.state = "playing"
         self.game_state_changed.emit("Game started")
-        return True
+        return
+
+    @Slot()
+    def show_hand(self, name):
+        # get Player object to pass to show_hand()
+        player = self._game.get_player(name)
+        hand = self._game.show_hand(player)
+        self.show_hand_requested.emit(hand)
+
+    @Slot()
+    def get_winner(self):
+        winners = self._game.winners()
+        if len(winners) > 1:
+            text = f"The game is a tie between {'& '.join(player.name for player in winners)}"
+            self.winner_declared.emit(text)
+        else:
+            player = next(iter(winners))
+            text = f"The winner is {player.name}"
+            self.winner_declared.emit(text)
+
+    @Slot()
+    def restart_game(self) -> None:
+        # Reset the game model
+        self._game.restart_game()
+
+        # Emit signals to update the UI
+        # First remove all players
+        for player_name in self.players:
+            self.player_removed.emit(player_name)
+
+        # Reset game state
+        self.game_state_changed.emit("Game setup in progress")
