@@ -38,7 +38,8 @@ class Card:
     #     "Ace": 14,
     # }
 
-    SUIT_SET = {"C", "D", "H", "S"}
+    SUIT_SET = {"♣", "♦", "♥", "♠"}
+    # SUIT_SET = {"C", "D", "H", "S"}
     # SUIT_SET = {"Clubs", "Diamonds", "Hearts", "Spades"}
 
     # def __init__(self, rank: Rank, suit: Suit):
@@ -58,4 +59,4 @@ class Card:
         return self.RANK_DICT[self._rank] < other.RANK_DICT[self._rank]
 
     def __str__(self) -> str:
-        return f"{self._rank} of {self._suit}"
+        return f"{self._rank}{self._suit}"

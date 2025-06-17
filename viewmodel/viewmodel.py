@@ -102,14 +102,7 @@ class ViewModel(QObject):
 
     @Slot()
     def get_winner(self):
-        winners = self._game.winners()
-        if len(winners) > 1:
-            text = f"The game is a tie between {'& '.join(player.name for player in winners)}"
-            self.winner_declared.emit(text)
-        else:
-            player = next(iter(winners))
-            text = f"The winner is {player.name}"
-            self.winner_declared.emit(text)
+        self.winner_declared.emit(self._game.winners())
 
     @Slot()
     def restart_game(self) -> None:

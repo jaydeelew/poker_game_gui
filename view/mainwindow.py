@@ -1,5 +1,6 @@
 from PySide6.QtCore import QFile, Slot, Qt
 from PySide6.QtUiTools import QUiLoader
+from PySide6.QtWidgets import QApplication
 from viewmodel.viewmodel import ViewModel
 import os
 
@@ -41,6 +42,7 @@ class MainWindow:
         self.on_game_state_changed("Game setup in progress")
 
     def show(self):
+        self.center_dialog(self.main_window)
         self.main_window.show()
 
     """
@@ -48,34 +50,22 @@ class MainWindow:
     Contains methods for displaying various dialog boxes used in the game UI
     """
 
-    def show_cannot_modify_game_dialog(self):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        ui_file = QFile(os.path.join(current_dir, "cannotmodifygame.ui"))
-        ui_file.open(QFile.OpenModeFlag.ReadOnly)
-        dialog = self.loader.load(ui_file)
-        ui_file.close()
-        dialog.exec()
-
-    def show_no_hand_to_show_dialog(self):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        ui_file = QFile(os.path.join(current_dir, "nohandtoshow.ui"))
-        ui_file.open(QFile.OpenModeFlag.ReadOnly)
-        dialog = self.loader.load(ui_file)
-        ui_file.close()
-        dialog.exec()
+    def center_dialog(self, dialog):
+        screen = QApplication.instance().primaryScreen().availableGeometry()
+        x = (screen.width() - dialog.width()) // 2
+        y = (screen.height() - dialog.height()) // 2
+        dialog.move(x, y)
 
     def show_dealt_dialog(self, name):
         current_dir = os.path.dirname(os.path.abspath(__file__))
         ui_file = QFile(os.path.join(current_dir, "cardsdealt.ui"))
         ui_file.open(QFile.OpenModeFlag.ReadOnly)
         dialog = self.loader.load(ui_file)
-
         dialog.labelPlayer.setText(name)
-        # Create a lambda function to capture the name parameter
-        # (otherwise show_hand would be executed immediately)
         dialog.pushButtonShowCards.clicked.connect(lambda: self.viewmodel.show_hand(name))
         dialog.pushButtonDone.clicked.connect(dialog.close)
         ui_file.close()
+        self.center_dialog(dialog)
         dialog.exec()
 
     def show_show_cards_ui(self, hand):
@@ -85,6 +75,7 @@ class MainWindow:
         dialog = self.loader.load(ui_file)
         dialog.labelShowCards.setText(hand)
         ui_file.close()
+        self.center_dialog(dialog)
         dialog.exec()
 
     def show_declare_winner_dialog(self, text):
@@ -94,22 +85,18 @@ class MainWindow:
         dialog = self.loader.load(ui_file)
         dialog.labelWinner.setText(text)
         ui_file.close()
+        self.center_dialog(dialog)
         dialog.exec()
 
-    def show_cannot_reveal_winner_dialog(self):
+    def show_display_string_dialog(self, text):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        ui_file = QFile(os.path.join(current_dir, "cannotrevealwinner.ui"))
+        ui_file = QFile(os.path.join(current_dir, "displaystring.ui"))
         ui_file.open(QFile.OpenModeFlag.ReadOnly)
         dialog = self.loader.load(ui_file)
+        dialog.labelDisplayString.setText(text)
+        dialog.pushButtonClose.clicked.connect(dialog.accept)
         ui_file.close()
-        dialog.exec()
-
-    def show_game_over_dialog(self):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        ui_file = QFile(os.path.join(current_dir, "gameover.ui"))
-        ui_file.open(QFile.OpenModeFlag.ReadOnly)
-        dialog = self.loader.load(ui_file)
-        ui_file.close()
+        self.center_dialog(dialog)
         dialog.exec()
 
     """
@@ -120,9 +107,11 @@ class MainWindow:
     @Slot()
     def handle_add_player(self):
         if self.viewmodel.get_game_state() == "playing":
-            self.show_cannot_modify_game_dialog()
+            self.show_display_string_dialog("You cannot add/remove players or deal during a game!")
+        if self.viewmodel.get_game_state() == "reveal":
+            self.show_display_string_dialog("Click the Reveal Winner buton")
         elif self.viewmodel.get_game_state() == "finished":
-            self.show_game_over_dialog()
+            self.show_display_string_dialog("Game Over! To restart click Game -> Restart")
         else:
             player_name = self.main_window.textEditPlayer.toPlainText().strip()
             self.viewmodel.add_player(player_name)
@@ -131,9 +120,11 @@ class MainWindow:
     @Slot()
     def handle_del_player(self):
         if self.viewmodel.get_game_state() == "playing":
-            self.show_cannot_modify_game_dialog()
+            self.show_display_string_dialog("You cannot add/remove players or deal during a game!")
+        if self.viewmodel.get_game_state() == "reveal":
+            self.show_display_string_dialog("Click the Reveal Winner buton")
         elif self.viewmodel.get_game_state() == "finished":
-            self.show_game_over_dialog()
+            self.show_display_string_dialog("Game Over! To restart click Game -> Restart")
         else:
             selected_items = self.main_window.listWidgetPlayers.selectedItems()
             for item in selected_items:
@@ -143,19 +134,26 @@ class MainWindow:
     @Slot()
     def handle_draw_game(self):
         if self.viewmodel.get_game_state() == "playing":
-            self.show_cannot_modify_game_dialog()
+            self.show_display_string_dialog("You cannot add/remove players or deal during a game!")
+        if self.viewmodel.get_game_state() == "reveal":
+            self.show_display_string_dialog("Click the Reveal Winner buton")
         elif self.viewmodel.get_game_state() == "finished":
-            self.show_game_over_dialog()
+            self.show_display_string_dialog("Game Over! To restart click Game -> Restart")
         else:
             self.viewmodel.set_game_of_draw(self.main_window.checkBoxDrawGame.isChecked())
 
     @Slot()
     def handle_play_game(self):
-        if self.viewmodel.get_game_state() == "playing":
-            self.show_cannot_modify_game_dialog()
+        if self.viewmodel.get_game_state() == "setup":
+            self.show_display_string_dialog("Must add at least two players to play")
+        elif self.viewmodel.get_game_state() == "playing":
+            self.show_display_string_dialog("You cannot add/remove players during a game!")
+        elif self.viewmodel.get_game_state() == "reveal":
+            self.show_display_string_dialog("Click the Reveal Winner button")
         elif self.viewmodel.get_game_state() == "finished":
-            self.show_game_over_dialog()
+            self.show_display_string_dialog("Game Over! To restart click Game -> Restart")
         else:
+            # Game state is "ready"
             self.viewmodel.deal_cards()
 
             for i in range(self.main_window.listWidgetPlayers.count()):
@@ -171,8 +169,10 @@ class MainWindow:
             self.viewmodel.get_winner()
             self.viewmodel.set_game_state("finished")
             self.viewmodel.game_state_changed.emit("Game over")
+        elif self.viewmodel.get_game_state() == "finished":
+            self.viewmodel.get_winner()
         else:
-            self.show_cannot_reveal_winner_dialog()
+            self.show_display_string_dialog("You must finish the game first")
 
     @Slot()
     def handle_restart(self):
@@ -218,5 +218,4 @@ class MainWindow:
 
     @Slot(str)
     def on_error(self, error_message: str):
-        # For now, just print the error. Later we can add a proper error display
-        print(f"Error: {error_message}")
+        self.show_display_string_dialog(error_message)

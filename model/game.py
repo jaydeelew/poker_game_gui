@@ -23,8 +23,7 @@ class PokerGame:
         self._draw_game = False
         self._deck: Deck = Deck()
         self._players_hands: dict[Player, Hand | None] = {}
-        # Game setup in progress, Game is Ready to start, Game is active, Game is finished
-        self._game_state = "setup"  # setup, ready, playing, finished
+        self._game_state = "setup"  # setup, ready, playing, reveal, finished
 
     @property
     def state(self) -> str:
@@ -37,7 +36,7 @@ class PokerGame:
         else:
             raise ValueError("Trying to set invalid state")
 
-    def set_draw_game(self, draw_game: bool) -> None:
+    def set_game_of_draw(self, draw_game: bool) -> None:
         self._draw_game = draw_game
 
     def add_player(self, name: str):
@@ -65,18 +64,18 @@ class PokerGame:
             match hand._hand_value[0]:
                 case Hand.ROYAL_FLUSH:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    return f"Royal Flush: {', '.join(str(card) for card in sorted_cards)}"
+                    return f"Royal Flush: {' '.join(str(card) for card in sorted_cards)}"
 
                 case Hand.STRAIGHT_FLUSH:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    return f"Straight Flush: {', '.join(str(card) for card in sorted_cards)}"
+                    return f"Straight Flush: {' '.join(str(card) for card in sorted_cards)}"
 
                 case Hand.FOUR_OF_A_KIND:
                     # Group four matching cards first, then the remaining card
                     four_value = hand._hand_value[1]
                     four_cards = [card for card in hand._cards if card.rank == four_value]
                     other_card = [card for card in hand._cards if card.rank != four_value]
-                    return f"Four of a Kind: {', '.join(str(card) for card in four_cards + other_card)}"
+                    return f"Four of a Kind: {' '.join(str(card) for card in four_cards + other_card)}"
 
                 case Hand.FULL_HOUSE:
                     # Group three matching cards first, then the pair
@@ -84,18 +83,16 @@ class PokerGame:
                     pair_value = hand._hand_value[2]
                     three_cards = [card for card in hand._cards if card.rank == three_value]
                     pair_cards = [card for card in hand._cards if card.rank == pair_value]
-                    return (
-                        f"Full House: {', '.join(str(card) for card in three_cards + pair_cards)}"
-                    )
+                    return f"Full House: {' '.join(str(card) for card in three_cards + pair_cards)}"
 
                 case Hand.FLUSH:
                     # Sort by value since they're all the same suit
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank, reverse=True)
-                    return f"Flush: {', '.join(str(card) for card in sorted_cards)}"
+                    return f"Flush: {' '.join(str(card) for card in sorted_cards)}"
 
                 case Hand.STRAIGHT:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    return f"Straight: {', '.join(str(card) for card in sorted_cards)}"
+                    return f"Straight: {' '.join(str(card) for card in sorted_cards)}"
 
                 case Hand.THREE_OF_A_KIND:
                     three_value = hand._hand_value[1]
@@ -105,17 +102,15 @@ class PokerGame:
                         key=lambda x: x.rank,
                         reverse=True,
                     )
-                    return f"Three of a Kind: {', '.join(str(card) for card in three_cards + other_cards)}"
+                    return f"Three of a Kind: {' '.join(str(card) for card in three_cards + other_cards)}"
 
                 case Hand.TWO_PAIR:
                     high_pair = hand._hand_value[1]
                     low_pair = hand._hand_value[2]
                     high_pair_cards = [card for card in hand._cards if card.rank == high_pair]
                     low_pair_cards = [card for card in hand._cards if card.rank == low_pair]
-                    other_card = [
-                        card for card in hand._cards if card.rank not in (high_pair, low_pair)
-                    ]
-                    return f"Two Pair: {', '.join(str(card) for card in high_pair_cards + low_pair_cards + other_card)}"
+                    other_card = [card for card in hand._cards if card.rank not in (high_pair, low_pair)]
+                    return f"Two Pair: {' '.join(str(card) for card in high_pair_cards + low_pair_cards + other_card)}"
 
                 case Hand.ONE_PAIR:
                     pair_value = hand._hand_value[1]
@@ -125,19 +120,16 @@ class PokerGame:
                         key=lambda x: x.rank,
                         reverse=True,
                     )
-                    return f"One Pair: {', '.join(str(card) for card in pair_cards + other_cards)}"
+                    return f"One Pair: {' '.join(str(card) for card in pair_cards + other_cards)}"
 
                 case Hand.HIGH_CARD:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank, reverse=True)
-                    return f"High Card: {', '.join(str(card) for card in sorted_cards)}"
+                    return f"High Card: {' '.join(str(card) for card in sorted_cards)}"
 
     def show_players_hands_hand(self, player):
         self.show_hand(player)
 
-    def show_all_hands(self) -> None:
-        for player in self._players_hands.keys():
-            pass
-
+    # TODO: Modify draw_cards for gui
     def draw_cards(self) -> None:
         for player in self._players_hands:
             num_cards_trading = 0
@@ -191,8 +183,9 @@ class PokerGame:
             self.show_hand(player)
             input("\nPress Enter when you are done seeing your cards ...")
 
-    def winners(self) -> set:
-        curr_winners = set()
+    # TODO: have winners output dict of player with hand objects
+    def winners(self) -> str:
+        winners = []
         curr_winning_hand = None
 
         for player, hand in self._players_hands.items():
@@ -201,16 +194,21 @@ class PokerGame:
                 continue
 
             # The first player with a valid hand is the initial winner.
-            if len(curr_winners) == 0 or curr_winning_hand is None:
-                curr_winners.add(player)
+            if len(winners) == 0 or curr_winning_hand is None:
+                winners.append(player)
                 curr_winning_hand = hand
             elif hand > curr_winning_hand:
-                curr_winners = {player}
+                winners = [player]
                 curr_winning_hand = hand
             elif hand == curr_winning_hand:
-                curr_winners.add(player)
+                winners.append(player)
 
-        return curr_winners
+        lines = []
+        for player in winners:
+            text = f"{player.name} - {self.show_hand(player)}"
+            lines.append(text)
+        final_text = "\n".join(lines)
+        return final_text
 
     def restart_game(self) -> None:
         self._draw_game = False
