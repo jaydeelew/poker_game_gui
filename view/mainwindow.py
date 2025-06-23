@@ -188,7 +188,7 @@ class MainWindow:
             self.show_display_string_dialog("Must add at least two players to play")
         elif self.viewmodel.get_game_state() == "playing":
             self.show_display_string_dialog("You cannot add/remove players during a game!")
-        elif self.viewmodel.get_game_state() == "reveal":
+        elif self.viewmodel.get_game_state() in ["reveal", "drawreveal"]:
             self.show_display_string_dialog("Click the Reveal Winner button")
         elif self.viewmodel.get_game_state() == "finished":
             self.show_display_string_dialog("Game Over! To restart click Game -> Restart")
@@ -221,6 +221,7 @@ class MainWindow:
         self.main_window.textEditPlayer.clear()
         self.main_window.checkBoxDrawGame.setChecked(False)
         self.main_window.checkBoxDrawGame.setEnabled(True)
+        self.main_window.statusBar().showMessage("Game setup in progress")
 
     """
     On Receiving ViewModel Signals Section

@@ -199,4 +199,4 @@ class PokerGame:
         self._deck = Deck()  # Create a new deck
         for player in self._players_hands:  # Clear players' hands
             self._players_hands[player] = None
-        self._game_state = "setup"  # Reset game state
+        self._game_state = "ready"  # Reset game to ready since we have existing players

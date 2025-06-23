@@ -126,11 +126,3 @@ class ViewModel(QObject):
     def restart_game(self) -> None:
         # Reset the game model
         self._game.restart_game()
-
-        # Emit signals to update the UI
-        # First remove all players
-        for player_name in self.players:
-            self.player_removed.emit(player_name)
-
-        # Reset game state
-        self.game_state_changed.emit("Game setup in progress")
