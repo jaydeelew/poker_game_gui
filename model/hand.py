@@ -44,9 +44,9 @@ class Hand:
     def add_card(self, card: Card) -> None:
         self._cards.append(card)
 
-    def remove_card(self, rank: int, suit: str) -> bool:
+    def remove_card(self, rank: str, suit: str) -> bool:
         for card in self._cards:
-            if card.rank == rank and card.suit == suit:
+            if card.rankstr == rank and card.suit == suit:
                 self._cards.remove(card)
                 return True
         return False
@@ -71,10 +71,7 @@ class Hand:
                     return self._hand_value[1] == other._hand_value[1]
                 # If both hands are Full House, compare the three of a kind value, then pair value.
                 case self.FULL_HOUSE:
-                    return (
-                        self._hand_value[1] == other._hand_value[1]
-                        and self._hand_value[2] == other._hand_value[2]
-                    )
+                    return self._hand_value[1] == other._hand_value[1] and self._hand_value[2] == other._hand_value[2]
                 # If both hands are Flush, compare the highest card values.
                 case self.FLUSH:
                     for i in range(1, 6):
@@ -106,14 +103,15 @@ class Hand:
                         if self._hand_value[i] != other._hand_value[i]:  # type: ignore
                             return False
                     return True
-                # If both hands are High Card, compare the highest card values.
+                # If both hands are High Card, compare all card values.
                 case self.HIGH_CARD:
-                    return self._hand_value[1] == other._hand_value[1]
+                    for i in range(1, 6):
+                        if self._hand_value[i] != other._hand_value[i]:  # type: ignore
+                            return False
+                    return True
                 # If hand type is not recognized, raise an error.
                 case _:
-                    raise ValueError(
-                        "Invalid hand value comparison - unexpected hand type"
-                    )
+                    raise ValueError("Invalid hand value comparison - unexpected hand type")
         else:
             return False
 
@@ -196,9 +194,7 @@ class Hand:
                     return False
                 # If hand type is not recognized, raise an error.
                 case _:
-                    raise ValueError(
-                        "Invalid hand value comparison - unexpected hand type"
-                    )
+                    raise ValueError("Invalid hand value comparison - unexpected hand type")
         else:
             return self._hand_value[0] < other._hand_value[0]
 

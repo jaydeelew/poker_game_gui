@@ -7,13 +7,49 @@
     <x>0</x>
     <y>0</y>
     <width>303</width>
-    <height>454</height>
+    <height>419</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>303</width>
+    <height>419</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>303</width>
+    <height>419</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Poker Time</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>303</width>
+     <height>376</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>303</width>
+     <height>376</height>
+    </size>
+   </property>
    <widget class="QListWidget" name="listWidgetPlayers">
     <property name="geometry">
      <rect>
@@ -24,7 +60,7 @@
      </rect>
     </property>
     <property name="selectionMode">
-     <enum>QAbstractItemView::SingleSelection</enum>
+     <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonAddPlayer">
@@ -89,19 +125,6 @@
      <string>Enter player's name below</string>
     </property>
    </widget>
-   <widget class="QLabel" name="labelGameStatus">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>390</y>
-      <width>281</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="labelSelectPlayer">
     <property name="geometry">
      <rect>
@@ -158,7 +181,7 @@
      <x>0</x>
      <y>0</y>
      <width>303</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuGame">
@@ -169,7 +192,7 @@
    </widget>
    <addaction name="menuGame"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionRestart">
    <property name="text">
     <string>Restart</string>

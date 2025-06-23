@@ -1,7 +1,6 @@
 from .hand import Hand
 from .deck import Deck
 from .player import Player
-from .card import Card
 
 
 class PokerGame:
@@ -31,10 +30,13 @@ class PokerGame:
 
     @state.setter
     def state(self, text: str) -> bool:
-        if text in ["setup", "ready", "playing", "reveal", "finished"]:
+        if text in ["setup", "ready", "playing", "reveal", "drawreveal", "finished"]:
             self._game_state = text
         else:
             raise ValueError("Trying to set invalid state")
+
+    def get_game_of_draw(self):
+        return self._draw_game
 
     def set_game_of_draw(self, draw_game: bool) -> None:
         self._draw_game = draw_game
@@ -42,40 +44,47 @@ class PokerGame:
     def add_player(self, name: str):
         self._players_hands[Player(name)] = None
 
+    def get_player(self, name: str) -> Player:
+        for player in self._players_hands.keys():
+            if player.name == name:
+                return player
+
     def remove_player(self, name: str):
         # Find the Player object with this name
         for player in self._players_hands.keys():
             if player.name == name:
                 del self._players_hands[player]
 
-    def get_player(self, name: str) -> Player:
-        for player in self._players_hands.keys():
-            if player.name == name:
-                return player
-
     def deal_cards(self, hand_size: int) -> None:
         for player in self._players_hands:
             hand = self._deck.random_deal(hand_size)
             self._players_hands[player] = Hand(hand)
 
-    def show_hand(self, player: Player) -> str:
+    def show_hand(self, player: Player) -> list:
         hand = self._players_hands[player]
+        hand_list = []
         if hand:  # Check if hand exists
             match hand._hand_value[0]:
                 case Hand.ROYAL_FLUSH:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    return f"Royal Flush: {' '.join(str(card) for card in sorted_cards)}"
+                    hand_list.append("Royal Flush")
+                    for card in sorted_cards:
+                        hand_list.append(str(card))
 
                 case Hand.STRAIGHT_FLUSH:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    return f"Straight Flush: {' '.join(str(card) for card in sorted_cards)}"
+                    hand_list.append("Straight Flush")
+                    for card in sorted_cards:
+                        hand_list.append(str(card))
 
                 case Hand.FOUR_OF_A_KIND:
                     # Group four matching cards first, then the remaining card
                     four_value = hand._hand_value[1]
                     four_cards = [card for card in hand._cards if card.rank == four_value]
                     other_card = [card for card in hand._cards if card.rank != four_value]
-                    return f"Four of a Kind: {' '.join(str(card) for card in four_cards + other_card)}"
+                    hand_list.append("Four of a Kind")
+                    for card in four_cards + other_card:
+                        hand_list.append(str(card))
 
                 case Hand.FULL_HOUSE:
                     # Group three matching cards first, then the pair
@@ -83,16 +92,22 @@ class PokerGame:
                     pair_value = hand._hand_value[2]
                     three_cards = [card for card in hand._cards if card.rank == three_value]
                     pair_cards = [card for card in hand._cards if card.rank == pair_value]
-                    return f"Full House: {' '.join(str(card) for card in three_cards + pair_cards)}"
+                    hand_list.append("Full House")
+                    for card in three_cards + pair_cards:
+                        hand_list.append(str(card))
 
                 case Hand.FLUSH:
                     # Sort by value since they're all the same suit
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank, reverse=True)
-                    return f"Flush: {' '.join(str(card) for card in sorted_cards)}"
+                    hand_list.append("Flush")
+                    for card in sorted_cards:
+                        hand_list.append(str(card))
 
                 case Hand.STRAIGHT:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank)
-                    return f"Straight: {' '.join(str(card) for card in sorted_cards)}"
+                    hand_list.append("Straight")
+                    for card in sorted_cards:
+                        hand_list.append(str(card))
 
                 case Hand.THREE_OF_A_KIND:
                     three_value = hand._hand_value[1]
@@ -102,7 +117,9 @@ class PokerGame:
                         key=lambda x: x.rank,
                         reverse=True,
                     )
-                    return f"Three of a Kind: {' '.join(str(card) for card in three_cards + other_cards)}"
+                    hand_list.append("Three of a Kind")
+                    for card in three_cards + other_cards:
+                        hand_list.append(str(card))
 
                 case Hand.TWO_PAIR:
                     high_pair = hand._hand_value[1]
@@ -110,7 +127,9 @@ class PokerGame:
                     high_pair_cards = [card for card in hand._cards if card.rank == high_pair]
                     low_pair_cards = [card for card in hand._cards if card.rank == low_pair]
                     other_card = [card for card in hand._cards if card.rank not in (high_pair, low_pair)]
-                    return f"Two Pair: {' '.join(str(card) for card in high_pair_cards + low_pair_cards + other_card)}"
+                    hand_list.append("Two Pair")
+                    for card in high_pair_cards + low_pair_cards + other_card:
+                        hand_list.append(str(card))
 
                 case Hand.ONE_PAIR:
                     pair_value = hand._hand_value[1]
@@ -120,70 +139,35 @@ class PokerGame:
                         key=lambda x: x.rank,
                         reverse=True,
                     )
-                    return f"One Pair: {' '.join(str(card) for card in pair_cards + other_cards)}"
+                    hand_list.append("One Pair")
+                    for card in pair_cards + other_cards:
+                        hand_list.append(str(card))
 
                 case Hand.HIGH_CARD:
                     sorted_cards = sorted(hand._cards, key=lambda x: x.rank, reverse=True)
-                    return f"High Card: {' '.join(str(card) for card in sorted_cards)}"
+                    hand_list.append("High Card")
+                    for card in sorted_cards:
+                        hand_list.append(str(card))
 
-    def show_players_hands_hand(self, player):
-        self.show_hand(player)
+        return hand_list
 
-    # TODO: Modify draw_cards for gui
-    def draw_cards(self) -> None:
-        for player in self._players_hands:
-            num_cards_trading = 0
-            print(f"\n{player.name}, please have a seat")
-            input("Press Enter when you are ready to see your cards ...")
-            self.show_hand(player)
-            while True:
-                ans = input(f"\n{player.name}, how many cards are you trading in (0-3)? ")
-                try:
-                    num_cards_trading = int(ans)
-                except ValueError:
-                    print("Invalid input. Please enter a number")
-                    input("Press Enter to continue ...")
-                    continue
+    def exchange_cards(self, player: Player, selected_cards: list) -> list:
+        hand = self._players_hands[player]
 
-                if not 0 <= num_cards_trading <= 3:
-                    print("You must enter a number from 0 to 3")
-                    input("Press Enter to continue ...")
-                    continue
-                else:
-                    break
+        for i in range(0, len(selected_cards)):
+            # rank is everything except the last character
+            # suit is the last character
+            rank, suit = selected_cards[i][:-1], selected_cards[i][-1]
+            hand.remove_card(rank, suit)
+            new_card = self._deck.random_deal_one()
+            hand.add_card(new_card)
 
-            curr_num_cards = 0
-            while curr_num_cards < num_cards_trading:
-                trade = input("Enter the card you are trading (e.g. Two of Hearts): ").split()
+        hand.update_best_hand()
+        self._players_hands[player] = hand
 
-                # Get the player's hand.
-                player_hand = self._players_hands[player]
+        # return hand_list
+        return self.show_hand(player)
 
-                # Check if player has a valid hand.
-                if player_hand is None:
-                    print(f"Player {player.name} has no hand")
-                    continue
-
-                # Is trade is a valid card?
-                if trade[0] in Card.RANK_DICT and trade[2] in Card.SUIT_SET:
-                    # If the player is holding this card, remove the card from the players hand.
-                    if player_hand.remove_card(Card.RANK_DICT[trade[0]], trade[2]):
-                        new_card = self._deck.random_deal_one()
-                        player_hand.add_card(new_card)
-                        player_hand.update_best_hand()
-                        curr_num_cards += 1
-                    else:
-                        print(f"{player.name} does not have a {trade[0]} of {trade[2]}")
-                        input("Press Enter to continue ...")
-                else:
-                    print("Invalid card. Please enter a valid card value and suit.")
-                    input("Press Enter to continue ...")
-
-            print("\nYour final hand:")
-            self.show_hand(player)
-            input("\nPress Enter when you are done seeing your cards ...")
-
-    # TODO: have winners output dict of player with hand objects
     def winners(self) -> str:
         winners = []
         curr_winning_hand = None
@@ -213,5 +197,6 @@ class PokerGame:
     def restart_game(self) -> None:
         self._draw_game = False
         self._deck = Deck()  # Create a new deck
-        self._players_hands.clear()  # Clear all players and hands
+        for player in self._players_hands:  # Clear players' hands
+            self._players_hands[player] = None
         self._game_state = "setup"  # Reset game state

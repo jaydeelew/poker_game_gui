@@ -6,7 +6,9 @@ class ViewModel(QObject):
     # Signals
     player_added = Signal(str)
     player_removed = Signal(str)
-    show_hand_requested = Signal(str)
+    show_hand_requested = Signal(object)
+    show_draw_hand_requested = Signal(object, object)
+    cards_exchanged = Signal(object)
     winner_declared = Signal(str)
     winner_set_requested = Signal(set)
     game_state_changed = Signal(str)
@@ -27,10 +29,6 @@ class ViewModel(QObject):
     @Slot(str)
     def set_game_state(self, text) -> bool:
         self._game.state = text
-
-    @Slot(bool)
-    def set_game_of_draw(self, game_of_draw: bool):
-        self._game.set_game_of_draw(game_of_draw)
 
     @Slot(str)
     def add_player(self, player_name: str) -> bool:
@@ -93,12 +91,32 @@ class ViewModel(QObject):
         self.game_state_changed.emit("Game started")
         return
 
+    @Slot(bool)
+    def get_game_of_draw(self):
+        self._game.get_game_of_draw()
+
+    @Slot(bool)
+    def set_game_of_draw(self, game_of_draw: bool):
+        self._game.set_game_of_draw(game_of_draw)
+
+    @Slot()
+    def exchange_cards(self, player, selected_cards: list[str]):
+        hand_list = self._game.exchange_cards(player, selected_cards)
+        self.cards_exchanged.emit(hand_list)
+
     @Slot()
     def show_hand(self, name):
         # get Player object to pass to show_hand()
         player = self._game.get_player(name)
-        hand = self._game.show_hand(player)
-        self.show_hand_requested.emit(hand)
+        hand_list = self._game.show_hand(player)
+        self.show_hand_requested.emit(hand_list)
+
+    @Slot()
+    def show_draw_hand(self, name):
+        # get Player object to pass to show_hand()
+        player = self._game.get_player(name)
+        hand_list = self._game.show_hand(player)
+        self.show_draw_hand_requested.emit(player, hand_list)
 
     @Slot()
     def get_winner(self):

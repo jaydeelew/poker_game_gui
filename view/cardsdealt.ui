@@ -31,7 +31,7 @@
     <string>Your cards have been dealt!</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
@@ -49,10 +49,10 @@
     </font>
    </property>
    <property name="text">
-    <string>Click Ok to view your cards</string>
+    <string>Click Show to view your cards</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
@@ -73,7 +73,7 @@
     <string>Be sure the other players are not looking</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="labelPlayer">
@@ -94,7 +94,7 @@
     <string/>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButtonShowCards">
@@ -107,7 +107,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Ok</string>
+    <string>Show</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButtonDone">
@@ -141,7 +141,7 @@
     <string>Click Done when finished</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignmentFlag::AlignCenter</set>
    </property>
   </widget>
  </widget>

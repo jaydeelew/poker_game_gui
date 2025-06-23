@@ -52,6 +52,10 @@ class Card:
         return self.RANK_DICT[self._rank]
 
     @property
+    def rankstr(self) -> str:
+        return self._rank
+
+    @property
     def suit(self) -> str:
         return self._suit
 

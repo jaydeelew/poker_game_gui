@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>410</width>
-    <height>223</height>
+    <height>220</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -19,10 +19,10 @@
       </font>
      </property>
      <property name="text">
-      <string>This is a wide label</string>
+      <string>Display text here</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignHCenter</set>
+      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
    </item>
