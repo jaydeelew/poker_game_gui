@@ -49,6 +49,7 @@ class MainWindow:
     Contains methods for displaying various dialog boxes used in the game UI
     """
 
+    # region
     def center_dialog(self, dialog):
         screen = QApplication.instance().primaryScreen().availableGeometry()
         x = (screen.width() - dialog.width()) // 2
@@ -64,7 +65,6 @@ class MainWindow:
 
         def show_hand_dialog_chooser():
             if self.viewmodel.get_game_state() == "drawreveal":
-                # The lambda is used to pass the name to the show_hand method without calling it immediately
                 self.viewmodel.show_hand(name)
             elif self.main_window.checkBoxDrawGame.isChecked():
                 self.viewmodel.set_game_state("drawreveal")
@@ -162,11 +162,14 @@ class MainWindow:
         self.center_dialog(dialog)
         dialog.exec()
 
+        # endregion
+
     """
     Handle UI Signals Section
     Contains methods that call ViewModel methods in response to UI signals
     """
 
+    # region
     @Slot()
     def handle_add_player(self):
         if self.viewmodel.get_game_state() == "playing":
@@ -235,11 +238,14 @@ class MainWindow:
         self.main_window.checkBoxDrawGame.setEnabled(True)
         self.on_game_state_changed("Game setup in progress")
 
+    # endregion
+
     """
     On Receiving ViewModel Signals Section
     Contains methods to update UI
     """
 
+    # region
     @Slot(str)
     def on_player_added(self, player_name: str):
         self.main_window.listWidgetPlayers.addItem(player_name)
@@ -285,3 +291,5 @@ class MainWindow:
             self.main_window.checkBoxDrawGame.setEnabled(False)
         else:
             self.main_window.checkBoxDrawGame.setEnabled(True)
+
+    # endregion

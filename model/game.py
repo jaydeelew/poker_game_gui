@@ -204,7 +204,9 @@ class PokerGame:
 
     def restart_game(self) -> None:
         self._draw_game = False
-        self._deck = Deck()  # Create a new deck
-        for player in self._players_hands:  # Clear players' hands
+        self._deck = Deck()
+        # Set all players' hands to None
+        for player in self._players_hands:
             self._players_hands[player] = None
-        self._game_state = "ready"  # Reset game to ready since we have existing players
+        # Reset game to ready instead of setup since we keep existing players
+        self._game_state = "ready"
