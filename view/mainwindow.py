@@ -21,13 +21,14 @@ class MainWindow:
 
         self.viewmodel = ViewModel()
 
-        # Connect UI signals to ViewModel slots
+        # Connect UI signals to MainWindow slots that call ViewModel methods
         self.main_window.pushButtonAddPlayer.clicked.connect(self.handle_add_player)
         self.main_window.pushButtonDelPlayer.clicked.connect(self.handle_del_player)
         self.main_window.pushButtonPlayGame.clicked.connect(self.handle_play_game)
         self.main_window.pushButtonRevealWinner.clicked.connect(self.handle_reveal_winner)
+        self.main_window.actionRestart.triggered.connect(self.handle_restart)
 
-        # Connect ViewModel signals to UI slots/updates
+        # Connect ViewModel signals to MainWindow slots that update the UI
         self.viewmodel.player_added.connect(self.on_player_added)
         self.viewmodel.player_removed.connect(self.on_player_removed)
         self.viewmodel.show_hand_requested.connect(self.on_show_hand_requested)
@@ -36,9 +37,6 @@ class MainWindow:
         self.viewmodel.winner_declared.connect(self.on_winner_declared)
         self.viewmodel.game_state_changed.connect(self.on_game_state_changed)
         self.viewmodel.error_occurred.connect(self.on_error)
-
-        # Connect the restart action
-        self.main_window.actionRestart.triggered.connect(self.handle_restart)
 
         self.on_game_state_changed("Game setup in progress")
 
@@ -197,10 +195,6 @@ class MainWindow:
                 self.viewmodel.remove_player(name)
 
     @Slot()
-    def handle_draw_game(self):
-        self.viewmodel.set_game_of_draw(self.main_window.checkBoxDrawGame.isChecked())
-
-    @Slot()
     def handle_play_game(self):
         if self.viewmodel.get_game_state() == "setup":
             self.show_display_string_dialog("Must add at least two players to play")
@@ -239,7 +233,7 @@ class MainWindow:
         self.main_window.textEditPlayer.clear()
         self.main_window.checkBoxDrawGame.setChecked(False)
         self.main_window.checkBoxDrawGame.setEnabled(True)
-        self.main_window.statusBar().showMessage("Game setup in progress")
+        self.on_game_state_changed("Game setup in progress")
 
     """
     On Receiving ViewModel Signals Section
@@ -284,7 +278,7 @@ class MainWindow:
     def on_error(self, error_message: str):
         self.show_display_string_dialog(error_message)
 
-    # Add this method to update checkbox state based on game state
+    # Works with on_game_state_changed()
     def update_checkbox_state(self):
         game_state = self.viewmodel.get_game_state()
         if game_state in ["playing", "reveal", "drawreveal", "finished"]:
