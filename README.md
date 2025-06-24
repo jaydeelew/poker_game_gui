@@ -1,5 +1,7 @@
 # Poker Game GUI
 
+> **⚠️ This project is still under construction. Features and documentation may change.**
+
 A desktop Poker game built with Python and PySide6, following the MVVM (Model-View-ViewModel) architecture. The game supports both 5-card draw and 5-card stud variants, allowing multiple players to join, play, and determine the winner based on standard poker hand rankings.
 
 [GitHub Repository](https://github.com/jaydeelew/poker_game_gui)
