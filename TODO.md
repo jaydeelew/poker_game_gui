@@ -92,26 +92,4 @@
 
 -
 -
--
-
----
-
-## 🎯 Sprint Goals
-
-### Current Sprint
-
-- [ ]
-- [ ]
-- [ ]
-
-### Next Sprint
-
-- [ ]
-- [ ]
-- [ ]
-
----
-
-_Last updated: [Date]_
-_Total tasks: [Count]_
-_Completed: [Count]_
+- ***
