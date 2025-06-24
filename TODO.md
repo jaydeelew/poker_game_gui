@@ -7,7 +7,7 @@
 ### Core Game Features
 
 - [ ] **Bug Fixes**
-  - [ ]
+  - [ ] Limit 5 card stud to 10 players and draw to 6 players
   - [ ]
   - [ ]
 
@@ -32,7 +32,7 @@
 ### Feature Additions
 
 - [ ] **New Game Variants**
-  - [ ]
+  - [ ] Texas Hold 'em
   - [ ]
   - [ ]
 
@@ -46,7 +46,7 @@
 ### Testing
 
 - [ ] **Test Coverage**
-  - [ ]
+  - [ ] Add Pytests
   - [ ]
   - [ ]
 
@@ -57,7 +57,7 @@
 ### Nice-to-Have Features
 
 - [ ] **Enhancements**
-  - [ ]
+  - [ ] Modern GUI
   - [ ]
   - [ ]
 
@@ -79,17 +79,3 @@
 - [x] PySide6 GUI integration
 
 ---
-
-## 📋 Notes
-
-### Ideas to Explore
-
--
--
--
-
-### Technical Debt
-
--
--
-- ***
