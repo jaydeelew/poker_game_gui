@@ -59,6 +59,11 @@
       <height>201</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
     <property name="selectionMode">
      <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
     </property>
@@ -84,6 +89,11 @@
       <width>181</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBoxDrawGame">

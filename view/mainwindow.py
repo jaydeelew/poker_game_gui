@@ -125,6 +125,20 @@ class MainWindow:
         dialog.labelCard_4.setText(hand_list[4])
         dialog.labelCard_5.setText(hand_list[5])
 
+        # Function to update label color based on group box state
+        def update_label_color(group_box, label):
+            if group_box.isChecked():
+                label.setStyleSheet("color: red;")
+            else:
+                label.setStyleSheet("color: black;")
+
+        # Connect each group box to its label
+        dialog.groupBox_1.toggled.connect(lambda checked: update_label_color(dialog.groupBox_1, dialog.labelCard_1))
+        dialog.groupBox_2.toggled.connect(lambda checked: update_label_color(dialog.groupBox_2, dialog.labelCard_2))
+        dialog.groupBox_3.toggled.connect(lambda checked: update_label_color(dialog.groupBox_3, dialog.labelCard_3))
+        dialog.groupBox_4.toggled.connect(lambda checked: update_label_color(dialog.groupBox_4, dialog.labelCard_4))
+        dialog.groupBox_5.toggled.connect(lambda checked: update_label_color(dialog.groupBox_5, dialog.labelCard_5))
+
         def on_exchange():
             selected_cards = []
             if dialog.groupBox_1.isChecked():
@@ -137,8 +151,12 @@ class MainWindow:
                 selected_cards.append(dialog.labelCard_4.text())
             if dialog.groupBox_5.isChecked():
                 selected_cards.append(dialog.labelCard_5.text())
-            self.viewmodel.exchange_cards(player, selected_cards)
-            dialog.close()
+
+            if len(selected_cards) > 3:
+                self.viewmodel.error_occurred.emit("You can only exchange up to 3 cards total")
+            else:
+                self.viewmodel.exchange_cards(player, selected_cards)
+                dialog.close()
 
         dialog.pushButtonExchange.clicked.connect(on_exchange)
 
@@ -155,7 +173,7 @@ class MainWindow:
     def handle_add_player(self):
         if self.viewmodel.get_game_state() == "playing":
             self.show_display_string_dialog("You cannot add/remove players or deal during a game!")
-        if self.viewmodel.get_game_state() == "reveal":
+        if self.viewmodel.get_game_state() in ["reveal", "drawreveal"]:
             self.show_display_string_dialog("Click the Reveal Winner buton")
         elif self.viewmodel.get_game_state() == "finished":
             self.show_display_string_dialog("Game Over! To restart click Game -> Restart")
@@ -168,7 +186,7 @@ class MainWindow:
     def handle_del_player(self):
         if self.viewmodel.get_game_state() == "playing":
             self.show_display_string_dialog("You cannot add/remove players or deal during a game!")
-        if self.viewmodel.get_game_state() == "reveal":
+        if self.viewmodel.get_game_state() in ["reveal", "drawreveal"]:
             self.show_display_string_dialog("Click the Reveal Winner buton")
         elif self.viewmodel.get_game_state() == "finished":
             self.show_display_string_dialog("Game Over! To restart click Game -> Restart")
@@ -269,7 +287,7 @@ class MainWindow:
     # Add this method to update checkbox state based on game state
     def update_checkbox_state(self):
         game_state = self.viewmodel.get_game_state()
-        if game_state in ["playing", "reveal", "finished"]:
+        if game_state in ["playing", "reveal", "drawreveal", "finished"]:
             self.main_window.checkBoxDrawGame.setEnabled(False)
         else:
             self.main_window.checkBoxDrawGame.setEnabled(True)

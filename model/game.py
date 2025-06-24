@@ -173,10 +173,6 @@ class PokerGame:
         curr_winning_hand = None
 
         for player, hand in self._players_hands.items():
-            # Skip if current hand is None
-            if hand is None:
-                continue
-
             # The first player with a valid hand is the initial winner.
             if len(winners) == 0 or curr_winning_hand is None:
                 winners.append(player)
@@ -189,8 +185,20 @@ class PokerGame:
 
         lines = []
         for player in winners:
-            text = f"{player.name} - {self.show_hand(player)}"
-            lines.append(text)
+            if len(winners) == 1:
+                text = f"Winner: {player.name} with {' '.join(self.show_hand(player))}"
+                lines.append(text)
+            else:
+                text = f"Tie with {player.name} with {' '.join(self.show_hand(player))}"
+                lines.append(text)
+
+        lines.append("\n")
+
+        for player, hand in self._players_hands.items():
+            if player not in winners:
+                text = f"Loser: {player.name} with {' '.join(self.show_hand(player))}"
+                lines.append(text)
+
         final_text = "\n".join(lines)
         return final_text
 

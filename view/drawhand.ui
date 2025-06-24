@@ -32,14 +32,13 @@
     <item>
      <widget class="QGroupBox" name="groupBox_1">
       <property name="styleSheet">
-       <string notr="true">QLabel {
-    color: red;         /* when enabled */
+       <string notr="true">QGroupBox:checked QLabel {
+    color: red;
 }
 
-QLabel:disabled {
-    color: black;      /* when disabled (unchecked group) */
-}
-</string>
+QGroupBox:unchecked QLabel {
+    color: black;
+}</string>
       </property>
       <property name="title">
        <string/>
@@ -58,7 +57,7 @@ QLabel:disabled {
       </property>
       <widget class="QLabel" name="labelCard_1">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
@@ -84,6 +83,15 @@ QLabel:disabled {
     </item>
     <item>
      <widget class="QGroupBox" name="groupBox_2">
+      <property name="styleSheet">
+       <string notr="true">QGroupBox:checked QLabel {
+    color: red;
+}
+
+QGroupBox:unchecked QLabel {
+    color: black;
+}</string>
+      </property>
       <property name="title">
        <string/>
       </property>
@@ -101,7 +109,7 @@ QLabel:disabled {
       </property>
       <widget class="QLabel" name="labelCard_2">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
@@ -116,16 +124,6 @@ QLabel:disabled {
          <pointsize>20</pointsize>
         </font>
        </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-    color: red;         /* when enabled */
-}
-
-QLabel:disabled {
-    color: black;      /* when disabled (unchecked group) */
-}
-</string>
-       </property>
        <property name="text">
         <string>Card 2</string>
        </property>
@@ -137,6 +135,15 @@ QLabel:disabled {
     </item>
     <item>
      <widget class="QGroupBox" name="groupBox_3">
+      <property name="styleSheet">
+       <string notr="true">QGroupBox:checked QLabel {
+    color: red;
+}
+
+QGroupBox:unchecked QLabel {
+    color: black;
+}</string>
+      </property>
       <property name="title">
        <string/>
       </property>
@@ -154,7 +161,7 @@ QLabel:disabled {
       </property>
       <widget class="QLabel" name="labelCard_3">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
@@ -169,16 +176,6 @@ QLabel:disabled {
          <pointsize>20</pointsize>
         </font>
        </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-    color: red;         /* when enabled */
-}
-
-QLabel:disabled {
-    color: black;      /* when disabled (unchecked group) */
-}
-</string>
-       </property>
        <property name="text">
         <string>Card 3</string>
        </property>
@@ -190,6 +187,15 @@ QLabel:disabled {
     </item>
     <item>
      <widget class="QGroupBox" name="groupBox_4">
+      <property name="styleSheet">
+       <string notr="true">QGroupBox:checked QLabel {
+    color: red;
+}
+
+QGroupBox:unchecked QLabel {
+    color: black;
+}</string>
+      </property>
       <property name="title">
        <string/>
       </property>
@@ -207,7 +213,7 @@ QLabel:disabled {
       </property>
       <widget class="QLabel" name="labelCard_4">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
@@ -222,16 +228,6 @@ QLabel:disabled {
          <pointsize>20</pointsize>
         </font>
        </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-    color: red;         /* when enabled */
-}
-
-QLabel:disabled {
-    color: black;      /* when disabled (unchecked group) */
-}
-</string>
-       </property>
        <property name="text">
         <string>Card 4</string>
        </property>
@@ -245,6 +241,15 @@ QLabel:disabled {
      <widget class="QGroupBox" name="groupBox_5">
       <property name="enabled">
        <bool>true</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox:checked QLabel {
+    color: red;
+}
+
+QGroupBox:unchecked QLabel {
+    color: black;
+}</string>
       </property>
       <property name="title">
        <string/>
@@ -263,7 +268,7 @@ QLabel:disabled {
       </property>
       <widget class="QLabel" name="labelCard_5">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
@@ -277,16 +282,6 @@ QLabel:disabled {
         <font>
          <pointsize>20</pointsize>
         </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-    color: red;         /* when enabled */
-}
-
-QLabel:disabled {
-    color: black;      /* when disabled (unchecked group) */
-}
-</string>
        </property>
        <property name="text">
         <string>Card 5</string>
