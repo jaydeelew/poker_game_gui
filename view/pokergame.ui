@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>303</width>
-    <height>419</height>
+    <width>400</width>
+    <height>511</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,180 +18,308 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>303</width>
-    <height>419</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>303</width>
-    <height>419</height>
+    <width>400</width>
+    <height>500</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Poker Time</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background-color:rgb(55, 59, 65);
+    color: #f8f8f2;
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    font-size: 12pt;
+}
+
+QPushButton#pushButtonAddPlayer {
+    background-color: #FF9800;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: bold;
+    min-height: 20px;
+}
+
+QPushButton#pushButtonAddPlayer:hover {
+    background-color: #F57C00;
+}
+
+QPushButton#pushButtonAddPlayer:pressed {
+    background-color:rgb(158, 80, 3);
+}
+
+QPushButton#pushButtonPlayGame {
+    background-color: #FF9800;
+    font-size: 14pt;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: bold;
+    min-height: 40px;
+}
+
+QPushButton#pushButtonPlayGame:hover {
+    background-color: #F57C00;
+}
+
+QPushButton#pushButtonPlayGame:pressed {
+    background-color:rgb(158, 80, 3);
+}
+
+QPushButton#pushButtonRevealWinner {
+    background-color: #FF9800;
+    font-size: 14pt;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: bold;
+    min-height: 50px;
+}
+
+QPushButton#pushButtonRevealWinner:hover {
+    background-color: #F57C00;
+}
+
+QPushButton#pushButtonRevealWinner:pressed {
+    background-color:rgb(158, 80, 3);
+}
+
+QPushButton#pushButtonDelPlayer {
+    background-color: #FF9800;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: bold;
+    min-height: 20px;
+}
+
+QPushButton#pushButtonDelPlayer:hover {
+    background-color: #F57C00;
+}
+
+QPushButton#pushButtonDelPlayer:pressed {
+    background-color:rgb(158, 80, 3);
+}
+
+
+QListWidget::item:selected {
+    background-color: #6c63ff;
+    color: white;
+}
+
+QCheckBox {
+    font-size: 12pt;
+    spacing: 8px;
+    color: #bfc7d5;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    border: 2px solid #6c63ff;
+    background-color: #282c34;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #6c63ff;
+    image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwIDNMNC41IDguNUwyIDYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=);
+}
+
+QLabel {
+    font-size: 12pt;
+    color: #bfc7d5;
+    font-weight: 500;
+}
+
+QMenuBar {
+    background: #23272e;
+    color: #f8f8f2;
+    border-bottom: 1px solid #444;
+}
+
+QMenuBar::item {
+    background: transparent;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+QMenuBar::item:selected {
+    background: #6c63ff;
+}
+
+QMenu {
+    background: #282c34;
+    color: #f8f8f2;
+    border: 1px solid #444;
+    border-radius: 6px;
+}
+
+QMenu::item {
+    padding: 8px 16px;
+}
+
+QMenu::item:selected {
+    background: #6c63ff;
+}
+
+QStatusBar {
+    background: #23272e;
+    color: #bfc7d5;
+    border-top: 1px solid #444;
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <property name="minimumSize">
-    <size>
-     <width>303</width>
-     <height>376</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>303</width>
-     <height>376</height>
-    </size>
-   </property>
-   <widget class="QListWidget" name="listWidgetPlayers">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>100</y>
-      <width>181</width>
-      <height>201</height>
-     </rect>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>16</number>
     </property>
-    <property name="font">
-     <font>
-      <pointsize>11</pointsize>
-     </font>
+    <property name="leftMargin">
+     <number>16</number>
     </property>
-    <property name="selectionMode">
-     <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+    <property name="topMargin">
+     <number>16</number>
     </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonAddPlayer">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>31</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
+    <property name="rightMargin">
+     <number>16</number>
     </property>
-    <property name="text">
-     <string>Add Player</string>
+    <property name="bottomMargin">
+     <number>16</number>
     </property>
-   </widget>
-   <widget class="QTextEdit" name="textEditPlayer">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>181</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkBoxDrawGame">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>220</y>
-      <width>91</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>5 Card Draw?</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonDelPlayer">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>100</y>
-      <width>93</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Remove Player</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelEnterName">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>181</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Enter player's name below</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelSelectPlayer">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>181</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Select a player to remove</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonPlayGame">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>250</y>
-      <width>91</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>PLAY</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonRevealWinner">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>310</y>
-      <width>281</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Reveal Winner</string>
-    </property>
-   </widget>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_1">
+      <property name="spacing">
+       <number>12</number>
+      </property>
+      <item>
+       <widget class="QLineEdit" name="lineEditPlayer">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>36</height>
+         </size>
+        </property>
+        <property name="placeholderText">
+         <string>Player Name ...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonAddPlayer">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>➕  Add     </string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>12</number>
+      </property>
+      <item>
+       <widget class="QListWidget" name="listWidgetPlayers">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonDelPlayer">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>🗑️ Remove</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="checkBoxDrawGame">
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>5 Card Draw</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButtonPlayGame">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>66</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>▶️ PLAY</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButtonRevealWinner">
+      <property name="font">
+       <font>
+        <family>Segoe UI</family>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>🏆 Reveal Winner</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>303</width>
-     <height>22</height>
+     <width>400</width>
+     <height>39</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuGame">
@@ -199,13 +327,32 @@
      <string>Game</string>
     </property>
     <addaction name="actionRestart"/>
+    <addaction name="separator"/>
+    <addaction name="actionSettings"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuGame"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionRestart">
    <property name="text">
-    <string>Restart</string>
+    <string>🔄 Restart</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>⚙️ Settings</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>ℹ️ About</string>
    </property>
   </action>
  </widget>

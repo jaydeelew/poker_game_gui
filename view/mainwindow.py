@@ -23,7 +23,9 @@ class MainWindow:
 
         # Connect UI signals to MainWindow slots that call ViewModel methods
         self.main_window.pushButtonAddPlayer.clicked.connect(self.handle_add_player)
+        self.main_window.lineEditPlayer.returnPressed.connect(self.handle_add_player)
         self.main_window.pushButtonDelPlayer.clicked.connect(self.handle_del_player)
+        self.main_window.listWidgetPlayers.itemDoubleClicked.connect(self.handle_double_click_remove)
         self.main_window.pushButtonPlayGame.clicked.connect(self.handle_play_game)
         self.main_window.pushButtonRevealWinner.clicked.connect(self.handle_reveal_winner)
         self.main_window.actionRestart.triggered.connect(self.handle_restart)
@@ -62,8 +64,11 @@ class MainWindow:
         ui_file.open(QFile.OpenModeFlag.ReadOnly)
         dialog = self.loader.load(ui_file)
         dialog.labelPlayer.setText(name)
+        have_seen_cards = False
 
         def show_hand_dialog_chooser():
+            nonlocal have_seen_cards
+            have_seen_cards = True
             if self.viewmodel.get_game_state() == "drawreveal":
                 self.viewmodel.show_hand(name)
             elif self.main_window.checkBoxDrawGame.isChecked():
@@ -72,8 +77,15 @@ class MainWindow:
             else:
                 self.viewmodel.show_hand(name)
 
+        def check_if_seen():
+            if have_seen_cards:
+                dialog.close()
+            else:
+                self.show_display_string_dialog("You must see your cards first")
+
         dialog.pushButtonShowCards.clicked.connect(show_hand_dialog_chooser)
-        dialog.pushButtonDone.clicked.connect(dialog.close)
+        dialog.pushButtonDone.clicked.connect(check_if_seen)
+
         ui_file.close()
         self.center_dialog(dialog)
         dialog.exec()
@@ -179,9 +191,9 @@ class MainWindow:
         elif self.viewmodel.get_game_state() == "finished":
             self.show_display_string_dialog("Game Over! To restart click Game -> Restart")
         else:
-            player_name = self.main_window.textEditPlayer.toPlainText().strip()
+            player_name = self.main_window.lineEditPlayer.text().strip()
             self.viewmodel.add_player(player_name)
-            self.main_window.textEditPlayer.setFocus()
+            self.main_window.lineEditPlayer.setFocus()
 
     @Slot()
     def handle_del_player(self):
@@ -196,6 +208,18 @@ class MainWindow:
             for item in selected_items:
                 name = item.text()
                 self.viewmodel.remove_player(name)
+
+    @Slot(object)
+    def handle_double_click_remove(self, item):
+        if self.viewmodel.get_game_state() == "playing":
+            self.show_display_string_dialog("You cannot add/remove players or deal during a game!")
+        elif self.viewmodel.get_game_state() in ["reveal", "drawreveal"]:
+            self.show_display_string_dialog("Click the Reveal Winner button")
+        elif self.viewmodel.get_game_state() == "finished":
+            self.show_display_string_dialog("Game Over! To restart click Game -> Restart")
+        else:
+            name = item.text()
+            self.viewmodel.remove_player(name)
 
     @Slot()
     def handle_play_game(self):
@@ -233,7 +257,7 @@ class MainWindow:
     @Slot()
     def handle_restart(self):
         self.viewmodel.restart_game()
-        self.main_window.textEditPlayer.clear()
+        self.main_window.lineEditPlayer.clear()
         self.main_window.checkBoxDrawGame.setChecked(False)
         self.main_window.checkBoxDrawGame.setEnabled(True)
         self.on_game_state_changed("Game setup in progress")
@@ -249,7 +273,7 @@ class MainWindow:
     @Slot(str)
     def on_player_added(self, player_name: str):
         self.main_window.listWidgetPlayers.addItem(player_name)
-        self.main_window.textEditPlayer.clear()
+        self.main_window.lineEditPlayer.clear()
 
     @Slot(str)
     def on_player_removed(self, player_name):

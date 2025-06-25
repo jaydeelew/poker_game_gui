@@ -65,7 +65,6 @@ class ViewModel(QObject):
             # Update game state if we don't have enough players
             if len(self.players) < 2:
                 self._game.state = "setup"
-                self.game_state_changed.emit("Need at least 2 players to start")
             return True
         else:
             self.error_occurred.emit("Player doesn't exist")
