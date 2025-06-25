@@ -8,22 +8,13 @@
 
 - [ ] **Bug Fixes**
   - [ ] Limit 5 card stud to 10 players and draw to 6 players
-  - [ ]
-  - [ ]
+  - [ ] Remove settings from Game drop down list
 
 ### UI/UX Improvements
 
 - [ ] **Interface Enhancements**
-  - [ ]
-  - [ ]
-  - [ ]
-
-### Performance & Stability
-
-- [ ] **Optimizations**
-  - [ ]
-  - [ ]
-  - [ ]
+  - [ ] remove fixed dialogs and use vertical/horizontal layouts and spacers
+  - [ ] Adjust text to object spacing in all dialogs
 
 ---
 
@@ -33,22 +24,18 @@
 
 - [ ] **New Game Variants**
   - [ ] Texas Hold 'em
-  - [ ]
-  - [ ]
+  - [ ] 7 card stud
+  - [ ] 7 card draw
 
 ### Code Quality
 
 - [ ] **Refactoring**
-  - [ ]
-  - [ ]
-  - [ ]
+  - [ ] Instead of View calling ViewModel methods, use signal/slot?
 
 ### Testing
 
-- [ ] **Test Coverage**
+- [ ] **Testing Utilities**
   - [ ] Add Pytests
-  - [ ]
-  - [ ]
 
 ---
 
@@ -57,16 +44,14 @@
 ### Nice-to-Have Features
 
 - [ ] **Enhancements**
-  - [ ] Modern GUI
-  - [ ]
-  - [ ]
+  - [ ] Betting feature
+  - [ ] LAN version to seperate players
+  - [ ] Allow user to revisit hand with pin
 
 ### Documentation
 
 - [ ] **Docs & Guides**
-  - [ ]
-  - [ ]
-  - [ ]
+  - [ ] About page
 
 ---
 
@@ -77,5 +62,6 @@
 - [x] Initial project setup with MVVM architecture
 - [x] Basic poker game implementation
 - [x] PySide6 GUI integration
+- [x] Colorized and formatted window and dialog objects
 
 ---
