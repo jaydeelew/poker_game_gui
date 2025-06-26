@@ -101,20 +101,6 @@ class MainWindow:
         self.center_dialog(dialog)
         dialog.exec()
 
-    def show_display_winner_dialog(self, num_of_winners, winners, losers):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        ui_file = QFile(os.path.join(current_dir, "displaywinner.ui"))
-        ui_file.open(QFile.OpenModeFlag.ReadOnly)
-        dialog = self.loader.load(ui_file)
-        if num_of_winners > 1:
-            dialog.labelWinner.setText("Tie")
-        dialog.labelDisplayWinners.setText(winners)
-        dialog.labelDisplayLosers.setText(losers)
-        dialog.pushButtonClose.clicked.connect(dialog.accept)
-        ui_file.close()
-        self.center_dialog(dialog)
-        dialog.exec()
-
     def show_hand_dialog(self, hand_list: list):
         current_dir = os.path.dirname(os.path.abspath(__file__))
         ui_file = QFile(os.path.join(current_dir, "hand.ui"))
@@ -188,6 +174,20 @@ class MainWindow:
         self.center_dialog(dialog)
         dialog.exec()
 
+    def show_display_winner_dialog(self, num_of_winners, winners, losers):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        ui_file = QFile(os.path.join(current_dir, "displaywinner.ui"))
+        ui_file.open(QFile.OpenModeFlag.ReadOnly)
+        dialog = self.loader.load(ui_file)
+        if num_of_winners > 1:
+            dialog.labelWinner.setText("Tie")
+        dialog.labelDisplayWinners.setText(winners)
+        dialog.labelDisplayLosers.setText(losers)
+        dialog.pushButtonClose.clicked.connect(dialog.accept)
+        ui_file.close()
+        self.center_dialog(dialog)
+        dialog.exec()
+
         # endregion
 
     """
@@ -246,6 +246,15 @@ class MainWindow:
         elif self.viewmodel.get_game_state() == "finished":
             self.show_display_string_dialog("Game Over! To restart click Game -> Restart")
         else:
+            if not self.main_window.checkBoxDrawGame.isChecked():
+                if self.main_window.listWidgetPlayers.count() > 10:
+                    self.show_display_string_dialog("5 card stud: 10 players max")
+                    return
+            else:
+                if self.main_window.listWidgetPlayers.count() > 6:
+                    self.show_display_string_dialog("5 card draw: 6 players max")
+                    return
+
             # Game state is "ready"
             self.viewmodel.deal_cards()
 

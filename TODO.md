@@ -6,8 +6,8 @@
 
 ### Core Game Features
 
-- [ ] **Bug Fixes**
-  - [ ] Limit 5 card stud to 10 players and draw to 6 players
+- [x] **Bug Fixes**
+  - [x] Limit 5 card stud to 10 players and draw to 6 players
 
 ### UI/UX Improvements
 
