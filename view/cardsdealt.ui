@@ -20,7 +20,8 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDialog, QWidget {
+   <string notr="true">
+QDialog, QWidget {
     background-color: rgb(55, 59, 65);
     color: #f8f8f2;
     font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
@@ -42,12 +43,12 @@ QPushButton:pressed {
     background-color: rgb(158, 80, 3);
 }
 QLabel#labelPlayer {
-    font-size: 18pt;
+    font-size: 36pt;
     font-weight: 600;
 }
 QLabel#Instruction {
     color: #bfc7d5;
-    font-size: 12pt;
+    font-size: 16pt;
     font-weight: 500;
 }
 </string>
