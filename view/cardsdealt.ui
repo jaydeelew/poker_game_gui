@@ -46,6 +46,10 @@ QLabel#labelPlayer {
     font-size: 36pt;
     font-weight: 600;
 }
+QLabel#labelInstruction {
+    font-size: 16pt;
+    font-weight: 400;
+}
 QLabel#Instruction {
     color: #bfc7d5;
     font-size: 16pt;
@@ -59,7 +63,7 @@ QLabel#Instruction {
      <property name="font">
       <font>
        <family>Segoe UI</family>
-       <pointsize>18</pointsize>
+       <pointsize>36</pointsize>
        <fontweight>DemiBold</fontweight>
       </font>
      </property>
@@ -72,12 +76,12 @@ QLabel#Instruction {
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="labelInstruction">
      <property name="font">
       <font>
        <family>Segoe UI</family>
-       <pointsize>12</pointsize>
-       <fontweight>Medium</fontweight>
+       <pointsize>16</pointsize>
+       <bold>false</bold>
       </font>
      </property>
      <property name="text">

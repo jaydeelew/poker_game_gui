@@ -328,8 +328,6 @@ QStatusBar {
     </property>
     <addaction name="actionRestart"/>
     <addaction name="separator"/>
-    <addaction name="actionSettings"/>
-    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuGame"/>
   </widget>
