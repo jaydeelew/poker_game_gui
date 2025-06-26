@@ -101,6 +101,20 @@ class MainWindow:
         self.center_dialog(dialog)
         dialog.exec()
 
+    def show_display_winner_dialog(self, num_of_winners, winners, losers):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        ui_file = QFile(os.path.join(current_dir, "displaywinner.ui"))
+        ui_file.open(QFile.OpenModeFlag.ReadOnly)
+        dialog = self.loader.load(ui_file)
+        if num_of_winners > 1:
+            dialog.labelWinner.setText("Tie")
+        dialog.labelDisplayWinners.setText(winners)
+        dialog.labelDisplayLosers.setText(losers)
+        dialog.pushButtonClose.clicked.connect(dialog.accept)
+        ui_file.close()
+        self.center_dialog(dialog)
+        dialog.exec()
+
     def show_hand_dialog(self, hand_list: list):
         current_dir = os.path.dirname(os.path.abspath(__file__))
         ui_file = QFile(os.path.join(current_dir, "hand.ui"))
@@ -296,8 +310,8 @@ class MainWindow:
         self.show_hand_dialog(hand_list)
 
     @Slot()
-    def on_winner_declared(self, winner):
-        self.show_display_string_dialog(winner)
+    def on_winner_declared(self, num_of_winners, winners, losers):
+        self.show_display_winner_dialog(num_of_winners, winners, losers)
 
     @Slot(str)
     def on_game_state_changed(self, text):

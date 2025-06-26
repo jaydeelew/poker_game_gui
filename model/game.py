@@ -168,8 +168,10 @@ class PokerGame:
         # return hand_list
         return self.show_hand(player)
 
-    def winners(self) -> str:
+    def winners(self) -> list:
         winners = []
+        winners_hands = []
+        losers_hands = []
         curr_winning_hand = None
 
         for player, hand in self._players_hands.items():
@@ -183,24 +185,17 @@ class PokerGame:
             elif hand == curr_winning_hand:
                 winners.append(player)
 
-        lines = []
-        for player in winners:
-            if len(winners) == 1:
-                text = f"Winner: {player.name} with {' '.join(self.show_hand(player))}"
-                lines.append(text)
+        for player in self._players_hands.keys():
+            if player in winners:
+                player_hand_list_of_str = [player.name] + ["with"] + self.show_hand(player)
+                player_hand_str = " ".join(player_hand_list_of_str)
+                winners_hands.append(player_hand_str)
             else:
-                text = f"Tie with {player.name} with {' '.join(self.show_hand(player))}"
-                lines.append(text)
+                player_hand_list_of_str = [player.name] + ["with"] + self.show_hand(player)
+                player_hand_str = " ".join(player_hand_list_of_str)
+                losers_hands.append(player_hand_str)
 
-        lines.append("\n")
-
-        for player, hand in self._players_hands.items():
-            if player not in winners:
-                text = f"Loser: {player.name} with {' '.join(self.show_hand(player))}"
-                lines.append(text)
-
-        final_text = "\n".join(lines)
-        return final_text
+        return [len(winners)] + winners_hands + losers_hands
 
     def restart_game(self) -> None:
         self._draw_game = False

@@ -56,12 +56,7 @@ QCheckBox::indicator:checked {
     background-color: #FF9800;
     border-radius: 3px;
 }
-<!-- QCheckBox::indicator:checked::after {
-    content: &quot;✓&quot;;
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
-} -->
+
 /* Add this new section for groupBoxes 1-5 */
 QGroupBox#groupBox_1,
 QGroupBox#groupBox_2,
@@ -514,7 +509,7 @@ QGroupBox#groupBox_5 {
           </font>
          </property>
          <property name="text">
-          <string>Exchange</string>
+          <string>Continue</string>
          </property>
         </widget>
        </item>

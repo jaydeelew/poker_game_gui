@@ -9,8 +9,7 @@ class ViewModel(QObject):
     show_hand_requested = Signal(object)
     show_draw_hand_requested = Signal(object, object)
     cards_exchanged = Signal(object)
-    winner_declared = Signal(str)
-    winner_set_requested = Signal(set)
+    winner_declared = Signal(int, str, str)
     game_state_changed = Signal(str)
     error_occurred = Signal(str)
 
@@ -108,7 +107,23 @@ class ViewModel(QObject):
         self.show_draw_hand_requested.emit(player, hand_list)
 
     def get_winner(self):
-        self.winner_declared.emit(self._game.winners())
+        results = self._game.winners()
+        num_of_winners = results[0]
+        winner_lines = []
+        loser_lines = []
+
+        i = 1
+        while i <= num_of_winners:
+            winner_lines.append(results[i])
+            i += 1
+        winners_str = "\n".join(winner_lines)
+
+        while i < len(results):
+            loser_lines.append(results[i])
+            i += 1
+        losers_str = "\n".join(loser_lines)
+
+        self.winner_declared.emit(num_of_winners, winners_str, losers_str)
 
     def restart_game(self) -> None:
         # Reset the game model

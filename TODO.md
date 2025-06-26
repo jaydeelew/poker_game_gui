@@ -8,13 +8,13 @@
 
 - [ ] **Bug Fixes**
   - [ ] Limit 5 card stud to 10 players and draw to 6 players
-  - [ ] Remove settings from Game drop down list
 
 ### UI/UX Improvements
 
 - [ ] **Interface Enhancements**
   - [ ] remove fixed dialogs and use vertical/horizontal layouts and spacers
   - [ ] Adjust text to object spacing in all dialogs
+  - [ ] Remove settings from Game drop down list
 
 ---
 
@@ -30,7 +30,7 @@
 ### Code Quality
 
 - [ ] **Refactoring**
-  - [ ] Instead of View calling ViewModel methods, use signal/slot?
+  - [ ] Instead of View calling ViewModel methods directly, use signal/slot?
 
 ### Testing
 
