@@ -104,7 +104,7 @@ poker_game_gui/
 
 ## Requirements
 
-- Python 3.7+
+- Python 3.10+
 - PySide6 (see requirements.txt)
 
 ---
