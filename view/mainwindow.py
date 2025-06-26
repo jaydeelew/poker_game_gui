@@ -136,30 +136,30 @@ class MainWindow:
         dialog.labelCard_5.setText(hand_list[5])
 
         # Function to update label color based on group box state
-        def update_label_color(group_box, label):
-            if group_box.isChecked():
+        def update_label_color(check_box, label):
+            if check_box.isChecked():
                 label.setStyleSheet("color: red;")
             else:
-                label.setStyleSheet("color: black;")
+                label.setStyleSheet("color: white;")
 
-        # Connect each group box to its label
-        dialog.groupBox_1.toggled.connect(lambda checked: update_label_color(dialog.groupBox_1, dialog.labelCard_1))
-        dialog.groupBox_2.toggled.connect(lambda checked: update_label_color(dialog.groupBox_2, dialog.labelCard_2))
-        dialog.groupBox_3.toggled.connect(lambda checked: update_label_color(dialog.groupBox_3, dialog.labelCard_3))
-        dialog.groupBox_4.toggled.connect(lambda checked: update_label_color(dialog.groupBox_4, dialog.labelCard_4))
-        dialog.groupBox_5.toggled.connect(lambda checked: update_label_color(dialog.groupBox_5, dialog.labelCard_5))
+        # Connect each check box to its label
+        dialog.checkBox_1.toggled.connect(lambda checked: update_label_color(dialog.checkBox_1, dialog.labelCard_1))
+        dialog.checkBox_2.toggled.connect(lambda checked: update_label_color(dialog.checkBox_2, dialog.labelCard_2))
+        dialog.checkBox_3.toggled.connect(lambda checked: update_label_color(dialog.checkBox_3, dialog.labelCard_3))
+        dialog.checkBox_4.toggled.connect(lambda checked: update_label_color(dialog.checkBox_4, dialog.labelCard_4))
+        dialog.checkBox_5.toggled.connect(lambda checked: update_label_color(dialog.checkBox_5, dialog.labelCard_5))
 
         def on_exchange():
             selected_cards = []
-            if dialog.groupBox_1.isChecked():
+            if dialog.checkBox_1.isChecked():
                 selected_cards.append(dialog.labelCard_1.text())
-            if dialog.groupBox_2.isChecked():
+            if dialog.checkBox_2.isChecked():
                 selected_cards.append(dialog.labelCard_2.text())
-            if dialog.groupBox_3.isChecked():
+            if dialog.checkBox_3.isChecked():
                 selected_cards.append(dialog.labelCard_3.text())
-            if dialog.groupBox_4.isChecked():
+            if dialog.checkBox_4.isChecked():
                 selected_cards.append(dialog.labelCard_4.text())
-            if dialog.groupBox_5.isChecked():
+            if dialog.checkBox_5.isChecked():
                 selected_cards.append(dialog.labelCard_5.text())
 
             if len(selected_cards) > 3:
