@@ -477,7 +477,7 @@ QGroupBox#groupBox_5 {
         </font>
        </property>
        <property name="text">
-        <string>Select up to three cards</string>
+        <string>Exchange up to three cards</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
