@@ -31,11 +31,11 @@ class TestPokerGame:
         assert len(game._players_hands) == 0
 
     def test_get_nonexistent_player(self):
-        """Test that getting non-existent player returns None"""
+        """Test that getting non-existent player raises ValueError"""
         game = PokerGame()
         game.add_player("Charlie")
-        # This will raise an AttributeError because get_player doesn't handle non-existent players
-        with pytest.raises(AttributeError):
+        # This will raise a ValueError because get_player now handles non-existent players
+        with pytest.raises(ValueError, match="Player 'Nonexistent' not found in the game"):
             game.get_player("Nonexistent")
 
     def test_deal_cards(self):

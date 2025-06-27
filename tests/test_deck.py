@@ -30,12 +30,10 @@ class TestDeck:
     def test_random_deal(self):
         """Test that random_deal returns the correct number of cards"""
         deck = Deck()
-        initial_size = len(deck._deck)
         dealt_cards = deck.random_deal(5)
 
         assert len(dealt_cards) == 5
         assert len(deck._dealt) == 5
-        assert len(dealt_cards) + len(deck._dealt) == 5
 
     def test_random_deal_one(self):
         """Test that random_deal_one returns a single card"""

@@ -48,12 +48,18 @@ class PokerGame:
         for player in self._players_hands.keys():
             if player.name == name:
                 return player
+        raise ValueError(f"Player '{name}' not found in the game")
 
     def remove_player(self, name: str):
         # Find the Player object with this name
+        player_to_remove = None
         for player in self._players_hands.keys():
             if player.name == name:
-                del self._players_hands[player]
+                player_to_remove = player
+                break
+
+        if player_to_remove:
+            del self._players_hands[player_to_remove]
 
     def deal_cards(self, hand_size: int) -> None:
         for player in self._players_hands:

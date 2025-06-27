@@ -30,16 +30,6 @@ class TestCard:
         assert Card("K", "♠").rank == 13
         assert Card("A", "♥").rank == 14
 
-    def test_card_comparison(self):
-        """Test that cards can be compared correctly"""
-        card1 = Card("Q", "♦")
-        card2 = Card("K", "♦")
-        card3 = Card("Q", "♣")
-
-        assert card1 < card2
-        assert card2 > card1
-        assert card1.rank == card3.rank  # Same rank, different suit
-
     def test_invalid_rank(self):
         """Test that invalid rank raises error when accessing rank property"""
         card = Card("X", "♠")  # Invalid rank

@@ -1,11 +1,9 @@
-import pytest
 import sys
 import os
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
 from model.hand import Hand
 from model.card import Card
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 
 class TestHand:
@@ -100,7 +98,7 @@ class TestHand:
         original_length = len(hand._cards)
 
         result = hand.remove_card("A", "♠")
-        assert result == True
+        assert result is True
         assert len(hand._cards) == original_length - 1
 
     def test_remove_nonexistent_card(self):
@@ -109,4 +107,285 @@ class TestHand:
         hand = Hand(cards)
 
         result = hand.remove_card("2", "♥")
-        assert result == False
+        assert result is False
+
+    def test_hand_comparison_equality(self):
+        """Test that equal hands return True for equality comparison"""
+        # Test royal flush equality
+        royal_flush1 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("10", "♠")])
+        royal_flush2 = Hand([Card("A", "♥"), Card("K", "♥"), Card("Q", "♥"), Card("J", "♥"), Card("10", "♥")])
+        assert royal_flush1 == royal_flush2
+
+        # Test straight flush equality (same high card)
+        straight_flush1 = Hand([Card("9", "♠"), Card("8", "♠"), Card("7", "♠"), Card("6", "♠"), Card("5", "♠")])
+        straight_flush2 = Hand([Card("9", "♥"), Card("8", "♥"), Card("7", "♥"), Card("6", "♥"), Card("5", "♥")])
+        assert straight_flush1 == straight_flush2
+
+        # Test four of a kind equality (same four cards)
+        four_kind1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("A", "♣"), Card("K", "♠")])
+        four_kind2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("A", "♣"), Card("Q", "♥")])
+        assert four_kind1 == four_kind2
+
+        # Test full house equality (same three and pair)
+        full_house1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("K", "♠")])
+        full_house2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("K", "♥")])
+        assert full_house1 == full_house2
+
+        # Test flush equality (same card values)
+        flush1 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("9", "♠")])
+        flush2 = Hand([Card("A", "♥"), Card("K", "♥"), Card("Q", "♥"), Card("J", "♥"), Card("9", "♥")])
+        assert flush1 == flush2
+
+        # Test straight equality (same high card)
+        straight1 = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("10", "♠")])
+        straight2 = Hand([Card("A", "♥"), Card("K", "♠"), Card("Q", "♥"), Card("J", "♦"), Card("10", "♣")])
+        assert straight1 == straight2
+
+        # Test three of a kind equality (same three and kickers)
+        three_kind1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        three_kind2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♥"), Card("Q", "♥")])
+        assert three_kind1 == three_kind2
+
+        # Test two pair equality (same pairs and kicker)
+        two_pair1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        two_pair2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("K", "♣"), Card("Q", "♥")])
+        assert two_pair1 == two_pair2
+
+        # Test one pair equality (same pair and kickers)
+        one_pair1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        one_pair2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♥")])
+        assert one_pair1 == one_pair2
+
+        # Test high card equality (same card values)
+        high_card1 = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("9", "♠")])
+        high_card2 = Hand([Card("A", "♥"), Card("K", "♠"), Card("Q", "♥"), Card("J", "♦"), Card("9", "♣")])
+        assert high_card1 == high_card2
+
+    def test_hand_comparison_inequality(self):
+        """Test that different hands return False for equality comparison"""
+        royal_flush = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("10", "♠")])
+        four_kind = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("A", "♣"), Card("K", "♠")])
+        assert not (royal_flush == four_kind)
+
+        # Test same hand type but different values
+        straight_flush1 = Hand([Card("9", "♠"), Card("8", "♠"), Card("7", "♠"), Card("6", "♠"), Card("5", "♠")])
+        straight_flush2 = Hand([Card("8", "♥"), Card("7", "♥"), Card("6", "♥"), Card("5", "♥"), Card("4", "♥")])
+        assert not (straight_flush1 == straight_flush2)
+
+    def test_hand_comparison_less_than(self):
+        """Test that hand comparison using __lt__ works correctly"""
+        # Test different hand types
+        royal_flush = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("10", "♠")])
+        straight_flush = Hand([Card("9", "♥"), Card("8", "♥"), Card("7", "♥"), Card("6", "♥"), Card("5", "♥")])
+        four_kind = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("A", "♣"), Card("K", "♠")])
+        full_house = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("K", "♠")])
+        flush = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("9", "♠")])
+        straight = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("10", "♠")])
+        three_kind = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        two_pair = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        one_pair = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        high_card = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("9", "♠")])
+
+        # Test hand type hierarchy
+        assert straight_flush < royal_flush
+        assert four_kind < straight_flush
+        assert full_house < four_kind
+        assert flush < full_house
+        assert straight < flush
+        assert three_kind < straight
+        assert two_pair < three_kind
+        assert one_pair < two_pair
+        assert high_card < one_pair
+
+    def test_hand_comparison_same_type_less_than(self):
+        """Test comparison of hands of the same type using __lt__"""
+        # Test straight flush with different high cards
+        straight_flush1 = Hand([Card("9", "♠"), Card("8", "♠"), Card("7", "♠"), Card("6", "♠"), Card("5", "♠")])
+        straight_flush2 = Hand([Card("8", "♥"), Card("7", "♥"), Card("6", "♥"), Card("5", "♥"), Card("4", "♥")])
+        assert straight_flush2 < straight_flush1
+
+        # Test four of a kind with different four card values
+        four_kind1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("A", "♣"), Card("K", "♠")])
+        four_kind2 = Hand([Card("K", "♠"), Card("K", "♥"), Card("K", "♦"), Card("K", "♣"), Card("A", "♠")])
+        assert four_kind2 < four_kind1
+
+        # Test full house with different three of a kind values
+        full_house1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("K", "♠")])
+        full_house2 = Hand([Card("K", "♠"), Card("K", "♥"), Card("K", "♦"), Card("A", "♣"), Card("A", "♠")])
+        assert full_house2 < full_house1
+
+        # Test full house with same three of a kind but different pair
+        full_house3 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("K", "♠")])
+        full_house4 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("Q", "♣"), Card("Q", "♠")])
+        assert full_house4 < full_house3
+
+        # Test flush with different high cards
+        flush1 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("9", "♠")])
+        flush2 = Hand([Card("K", "♥"), Card("Q", "♥"), Card("J", "♥"), Card("10", "♥"), Card("8", "♥")])
+        assert flush2 < flush1
+
+        # Test straight with different high cards
+        straight1 = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("10", "♠")])
+        straight2 = Hand([Card("K", "♠"), Card("Q", "♥"), Card("J", "♦"), Card("10", "♣"), Card("9", "♠")])
+        assert straight2 < straight1
+
+        # Test three of a kind with different three card values
+        three_kind1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        three_kind2 = Hand([Card("K", "♠"), Card("K", "♥"), Card("K", "♦"), Card("A", "♣"), Card("Q", "♠")])
+        assert three_kind2 < three_kind1
+
+        # Test three of a kind with same three but different kickers
+        three_kind3 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        three_kind4 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("J", "♠")])
+        assert three_kind4 < three_kind3
+
+        # Test two pair with different higher pair
+        two_pair1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        two_pair2 = Hand([Card("K", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("Q", "♣"), Card("A", "♠")])
+        assert two_pair2 < two_pair1
+
+        # Test two pair with same higher pair but different lower pair
+        two_pair3 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        two_pair4 = Hand([Card("A", "♠"), Card("A", "♥"), Card("Q", "♦"), Card("Q", "♣"), Card("K", "♠")])
+        assert two_pair4 < two_pair3
+
+        # Test two pair with same pairs but different kicker
+        two_pair5 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        two_pair6 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("K", "♣"), Card("J", "♠")])
+        assert two_pair6 < two_pair5
+
+        # Test one pair with different pair values
+        one_pair1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        one_pair2 = Hand([Card("K", "♠"), Card("K", "♥"), Card("A", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        assert one_pair2 < one_pair1
+
+        # Test one pair with same pair but different kickers
+        one_pair3 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        one_pair4 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("10", "♠")])
+        assert one_pair4 < one_pair3
+
+        # Test high card with different high cards
+        high_card1 = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("9", "♠")])
+        high_card2 = Hand([Card("K", "♠"), Card("Q", "♥"), Card("J", "♦"), Card("10", "♣"), Card("8", "♠")])
+        assert high_card2 < high_card1
+
+    def test_hand_comparison_edge_cases(self):
+        """Test edge cases for hand comparisons"""
+        # Test ace-low straight (5-4-3-2-A)
+        ace_low_straight = Hand([Card("5", "♠"), Card("4", "♥"), Card("3", "♦"), Card("2", "♣"), Card("A", "♠")])
+        regular_straight = Hand([Card("6", "♠"), Card("5", "♥"), Card("4", "♦"), Card("3", "♣"), Card("2", "♠")])
+        assert ace_low_straight < regular_straight
+
+        # Test wheel straight (A-2-3-4-5) vs other straights
+        wheel_straight = Hand([Card("A", "♠"), Card("2", "♥"), Card("3", "♦"), Card("4", "♣"), Card("5", "♠")])
+        ten_high_straight = Hand([Card("10", "♠"), Card("9", "♥"), Card("8", "♦"), Card("7", "♣"), Card("6", "♠")])
+        assert wheel_straight < ten_high_straight
+
+        # Test hands with same kicker values but different suits
+        flush1 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("9", "♠")])
+        flush2 = Hand([Card("A", "♥"), Card("K", "♥"), Card("Q", "♥"), Card("J", "♥"), Card("9", "♥")])
+        assert flush1 == flush2  # Should be equal since suits don't matter for comparison
+
+    def test_hand_comparison_invalid_types(self):
+        """Test that comparison with invalid types returns NotImplemented"""
+        hand = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("10", "♠")])
+
+        # Test comparison with non-Hand objects
+        assert hand.__eq__("not a hand") == NotImplemented
+        assert hand.__lt__("not a hand") == NotImplemented
+
+    def test_hand_comparison_comprehensive_scenarios(self):
+        """Test comprehensive scenarios covering all hand types and their comparisons"""
+        # Create hands of all types
+        royal_flush = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("10", "♠")])
+        straight_flush = Hand([Card("9", "♥"), Card("8", "♥"), Card("7", "♥"), Card("6", "♥"), Card("5", "♥")])
+        four_kind = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("A", "♣"), Card("K", "♠")])
+        full_house = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("K", "♠")])
+        flush = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("9", "♠")])
+        straight = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("10", "♠")])
+        three_kind = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        two_pair = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        one_pair = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        high_card = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("9", "♠")])
+
+        # Test that hands are not equal to themselves (except royal flush)
+        assert royal_flush == royal_flush
+        assert straight_flush == straight_flush
+        assert four_kind == four_kind
+        assert full_house == full_house
+        assert flush == flush
+        assert straight == straight
+        assert three_kind == three_kind
+        assert two_pair == two_pair
+        assert one_pair == one_pair
+        assert high_card == high_card
+
+        # Test that no hand is less than itself
+        assert not (royal_flush < royal_flush)
+        assert not (straight_flush < straight_flush)
+        assert not (four_kind < four_kind)
+        assert not (full_house < full_house)
+        assert not (flush < flush)
+        assert not (straight < straight)
+        assert not (three_kind < three_kind)
+        assert not (two_pair < two_pair)
+        assert not (one_pair < one_pair)
+        assert not (high_card < high_card)
+
+        # Test complete ordering
+        hands = [
+            high_card,
+            one_pair,
+            two_pair,
+            three_kind,
+            straight,
+            flush,
+            full_house,
+            four_kind,
+            straight_flush,
+            royal_flush,
+        ]
+        for i in range(len(hands)):
+            for j in range(i + 1, len(hands)):
+                assert hands[i] < hands[j]
+                assert not (hands[j] < hands[i])
+                assert not (hands[i] == hands[j])
+
+    def test_hand_comparison_with_ace_rankings(self):
+        """Test hand comparisons involving ace rankings in different contexts"""
+        # Test ace as high card in high card hand
+        ace_high = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("9", "♠")])
+        king_high = Hand([Card("K", "♠"), Card("Q", "♥"), Card("J", "♦"), Card("10", "♣"), Card("8", "♠")])
+        assert king_high < ace_high
+
+        # Test ace as low card in wheel straight
+        wheel_straight = Hand([Card("A", "♠"), Card("2", "♥"), Card("3", "♦"), Card("4", "♣"), Card("5", "♠")])
+        six_high_straight = Hand([Card("6", "♠"), Card("5", "♥"), Card("4", "♦"), Card("3", "♣"), Card("2", "♠")])
+        assert wheel_straight < six_high_straight
+
+        # Test ace in pair comparison
+        ace_pair = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        king_pair = Hand([Card("K", "♠"), Card("K", "♥"), Card("A", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        assert king_pair < ace_pair
+
+    def test_hand_comparison_with_tie_breaking(self):
+        """Test hand comparisons that require tie-breaking logic"""
+        # Test flush tie-breaking (compare all cards in descending order)
+        flush1 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("9", "♠")])
+        flush2 = Hand([Card("A", "♥"), Card("K", "♥"), Card("Q", "♥"), Card("J", "♥"), Card("8", "♥")])
+        assert flush2 < flush1
+
+        # Test high card tie-breaking (compare all cards in descending order)
+        high_card1 = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("9", "♠")])
+        high_card2 = Hand([Card("A", "♥"), Card("K", "♠"), Card("Q", "♥"), Card("J", "♦"), Card("8", "♣")])
+        assert high_card2 < high_card1
+
+        # Test three of a kind with same three but different kickers
+        three_kind1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        three_kind2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("J", "♠")])
+        assert three_kind2 < three_kind1
+
+        # Test one pair with same pair but different kickers
+        one_pair1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        one_pair2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("10", "♠")])
+        assert one_pair2 < one_pair1

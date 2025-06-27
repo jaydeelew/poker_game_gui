@@ -85,6 +85,88 @@ The main window will open. Add players, select the game variant, and enjoy playi
 
 ---
 
+## Testing
+
+This project includes comprehensive unit tests using Pytest. The test suite covers all core game logic including cards, decks, hands, players, and game mechanics.
+
+### Running Tests
+
+1. **Run all tests:**
+
+   ```bash
+   pytest
+   ```
+
+2. **Run tests with verbose output:**
+
+   ```bash
+   pytest -v
+   ```
+
+3. **Run tests for a specific module:**
+
+   ```bash
+   pytest tests/test_card.py
+   pytest tests/test_hand.py
+   pytest tests/test_game.py
+   pytest tests/test_deck.py
+   pytest tests/test_player.py
+   ```
+
+4. **Run tests with coverage report:**
+
+   ```bash
+   pytest --cov=model --cov-report=html
+   ```
+
+5. **Run tests and stop on first failure:**
+   ```bash
+   pytest -x
+   ```
+
+### Test Structure
+
+The test suite is organized in the `tests/` directory with the following test files:
+
+- `test_card.py` - Tests for Card class functionality
+- `test_deck.py` - Tests for Deck class and shuffling
+- `test_hand.py` - Tests for Hand class and poker hand evaluation
+- `test_player.py` - Tests for Player class
+- `test_game.py` - Tests for Game class and game flow
+
+### Pytest Configuration
+
+The project includes a `pytest.ini` file with the following configuration:
+
+- Test files are located in the `tests/` directory
+- Test files must be named `test_*.py`
+- Test classes must be named `Test*`
+- Test functions must be named `test_*`
+- Verbose output and short traceback format are enabled by default
+
+### Writing New Tests
+
+To add new tests:
+
+1. Create a new file in the `tests/` directory with the naming convention `test_*.py`
+2. Import the modules you want to test from the `model/` directory
+3. Write test functions with the naming convention `test_*`
+4. Use Pytest's assert statements or assertion methods
+
+Example test structure:
+
+```python
+from model.card import Card
+from model.hand import Hand
+
+def test_card_creation():
+    card = Card("Hearts", "Ace")
+    assert card.suit == "Hearts"
+    assert card.rank == "Ace"
+```
+
+---
+
 ## Project Structure
 
 ```
@@ -94,11 +176,14 @@ poker_game_gui/
   model/
   view/
   viewmodel/
+  tests/
+  pytest.ini
 ```
 
 - **model/**: Game logic, card/deck/hand/player classes
 - **view/**: UI files and main window logic
 - **viewmodel/**: ViewModel connecting UI and game logic
+- **tests/**: Unit tests for all game components
 
 ---
 
@@ -106,6 +191,7 @@ poker_game_gui/
 
 - Python 3.10+
 - PySide6 (see requirements.txt)
+- Pytest (included in requirements.txt)
 
 ---
 
