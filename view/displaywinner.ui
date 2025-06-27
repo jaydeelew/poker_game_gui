@@ -36,16 +36,23 @@ QPushButton:pressed {
     background-color: rgb(158, 80, 3);
 }
 QLabel#labelWinner {
-    color: #bfc7d5;
+    <!-- color: #bfc7d5; -->
+    color: #6c63ff
     font-size: 40pt;
     font-weight: 500;
 }
 QLabel#labelLoser {
-    color: #bfc7d5;
+    <!-- color: #bfc7d5; -->
+    color: #6c63ff
     font-size: 40pt;
     font-weight: 500;
 }
-QLabel {
+QLabel#labelDisplayWinners {
+    color: #bfc7d5;
+    font-size: 24pt;
+    font-weight: 500;
+}
+QLabel#labelDisplayLosers {
     color: #bfc7d5;
     font-size: 24pt;
     font-weight: 500;
