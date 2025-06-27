@@ -51,7 +51,3 @@ class Deck:
 
     def reset_deck(self) -> None:
         self._dealt.clear()
-
-    def print_deck(self) -> None:
-        for i, card in self._deck.items():
-            print(i, str(card))

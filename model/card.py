@@ -59,8 +59,8 @@ class Card:
     def suit(self) -> str:
         return self._suit
 
-    def __lt__(self, other: "Card") -> bool:
-        return self.RANK_DICT[self._rank] < other.RANK_DICT[self._rank]
+    # def __lt__(self, other: "Card") -> bool:
+    #     return self.RANK_DICT[self._rank] < other.RANK_DICT[self._rank]
 
     def __str__(self) -> str:
         return f"{self._rank}{self._suit}"

@@ -30,17 +30,6 @@ class Hand:
         self._cards = cards
         self._hand_value = self.best_hand()
 
-    # Returns a list where first element is an integer 1-14 representing a hand
-    # ( e.g. 10 = Royal Flush)
-    # The remaining elements are the Card objects in the hand.
-    @property
-    def get_hand(self) -> list:
-        cards = []
-        cards.append(self._hand_value[0])
-        for card in self._cards:
-            cards.append(str(card))
-        return cards
-
     def add_card(self, card: Card) -> None:
         self._cards.append(card)
 

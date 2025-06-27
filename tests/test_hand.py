@@ -2,6 +2,7 @@ import sys
 import os
 from model.hand import Hand
 from model.card import Card
+import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -389,3 +390,148 @@ class TestHand:
         one_pair1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♠")])
         one_pair2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("10", "♠")])
         assert one_pair2 < one_pair1
+
+    def test_invalid_hand_type_comparison(self):
+        """Test that comparing hands with invalid hand type raises ValueError in __eq__ and __lt__"""
+        from model.hand import Hand
+        from model.card import Card
+
+        h1 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("10", "♠")])
+        h2 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("10", "♠")])
+        # Set invalid hand type
+        h1._hand_value = (999, -1, -1, -1, -1, -1)
+        h2._hand_value = (999, -1, -1, -1, -1, -1)
+        with pytest.raises(ValueError, match="unexpected hand type"):
+            h1 == h2
+        with pytest.raises(ValueError, match="unexpected hand type"):
+            h1 < h2
+
+    def test_hand_type_fallback_else_branches(self):
+        """Test else branches for __eq__ and __lt__ with different hand types"""
+        from model.hand import Hand
+        from model.card import Card
+
+        # High card vs one pair
+        high_card = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("9", "♠")])
+        one_pair = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        # __eq__ should be False
+        assert not (high_card == one_pair)
+        # __lt__ should be True
+        assert high_card < one_pair
+
+    def test_remove_card_returns_false(self):
+        """Test that remove_card returns False when the card is not present"""
+        hand = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("10", "♠")])
+        assert hand.remove_card("2", "♥") is False
+
+    def test_eq_and_lt_return_false(self):
+        """Test __eq__ and __lt__ return False for non-equal and not-less-than hands"""
+        # __eq__ returns False for different hand types
+        hand1 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("10", "♠")])
+        hand2 = Hand([Card("9", "♥"), Card("8", "♥"), Card("7", "♥"), Card("6", "♥"), Card("5", "♥")])
+        assert (hand1 == hand2) is False
+        # __lt__ returns False for higher hand not less than lower hand
+        assert (hand1 < hand2) is False
+        # __lt__ returns False for equal hands
+        hand3 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("10", "♠")])
+        assert (hand1 < hand3) is False
+
+    def test_best_hand_check_methods_return_false(self):
+        """Test that all check_* methods in best_hand can return False"""
+        # Use a hand that is only a high card (no pairs, no straight, no flush, etc.)
+        hand = Hand([Card("A", "♠"), Card("K", "♥"), Card("8", "♦"), Card("5", "♣"), Card("2", "♠")])
+        # Patch best_hand to expose check_* methods
+        value_list = [card.rank for card in hand._cards]
+        value_list.sort(reverse=True)
+        values_to_counts = {v: value_list.count(v) for v in set(value_list)}
+        suit_set = {card.suit for card in hand._cards}
+        # check_one_pair
+        pair_count = 0
+        for val in values_to_counts.values():
+            if val == 2:
+                pair_count += 1
+        assert pair_count == 0  # so check_one_pair would return False
+        # check_two_pair
+        assert sum(1 for v in values_to_counts.values() if v == 2) == 0  # so check_two_pair would return False
+        # check_three_kind
+        assert all(v != 3 for v in values_to_counts.values())  # so check_three_kind would return False
+        # check_straight
+        is_straight = True
+        for i in range(len(value_list) - 1):
+            if value_list[i] - value_list[i + 1] != 1:
+                is_straight = False
+        assert is_straight is False
+        # check_flush
+        assert len(suit_set) != 1  # so check_flush would return False
+        # check_full_house
+        one_pair = False
+        three_kind = False
+        for v in values_to_counts.values():
+            if v == 2:
+                one_pair = True
+            if v == 3:
+                three_kind = True
+        assert not (one_pair and three_kind)  # so check_full_house would return False
+        # check_four_kind
+        assert all(v != 4 for v in values_to_counts.values())  # so check_four_kind would return False
+        # check_straight_flush
+        flush = len(suit_set) == 1
+        straight = is_straight
+        assert not (flush and straight)  # so check_straight_flush would return False
+        # check_royal_flush
+        high_card = max(value_list)
+        straight_flush = flush and straight
+        assert not (straight_flush and high_card == Card.RANK_DICT["A"])  # so check_royal_flush would return False
+
+    def test_eq_and_lt_loops_return_false(self):
+        """Test __eq__ and __lt__ return False in the looped value comparisons for each hand type"""
+        from model.hand import Hand
+        from model.card import Card
+
+        # Flush: only one card different
+        flush1 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("9", "♠")])
+        flush2 = Hand([Card("A", "♠"), Card("K", "♠"), Card("Q", "♠"), Card("J", "♠"), Card("8", "♠")])
+        assert flush1 != flush2
+        assert not (flush1 == flush2)
+        assert not (flush1 < flush2)
+        # Three of a Kind: same three, different kicker
+        tok1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        tok2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("J", "♠")])
+        assert tok1 != tok2
+        assert not (tok1 == tok2)
+        assert not (tok1 < tok2)
+        # Two Pair: same pairs, different kicker
+        tp1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("K", "♣"), Card("Q", "♠")])
+        tp2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("K", "♣"), Card("J", "♠")])
+        assert tp1 != tp2
+        assert not (tp1 == tp2)
+        assert not (tp1 < tp2)
+        # One Pair: same pair, different kicker
+        op1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("J", "♠")])
+        op2 = Hand([Card("A", "♠"), Card("A", "♥"), Card("K", "♦"), Card("Q", "♣"), Card("10", "♠")])
+        assert op1 != op2
+        assert not (op1 == op2)
+        assert not (op1 < op2)
+        # High Card: different lowest card
+        hc1 = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("9", "♠")])
+        hc2 = Hand([Card("A", "♠"), Card("K", "♥"), Card("Q", "♦"), Card("J", "♣"), Card("8", "♠")])
+        assert hc1 != hc2
+        assert not (hc1 == hc2)
+        assert not (hc1 < hc2)
+
+    def test_full_house_eq_and_lt_return_false(self):
+        """Test __eq__ and __lt__ for FULL_HOUSE with different three-of-a-kind or pair values (should return False)"""
+        from model.hand import Hand
+        from model.card import Card
+
+        # Different three-of-a-kind value
+        fh1 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("K", "♣"), Card("K", "♠")])
+        fh2 = Hand([Card("K", "♠"), Card("K", "♥"), Card("K", "♦"), Card("A", "♣"), Card("A", "♥")])
+        assert fh1 != fh2
+        assert not (fh1 == fh2)
+        assert not (fh1 < fh2)
+        # Same three-of-a-kind, different pair value
+        fh3 = Hand([Card("A", "♠"), Card("A", "♥"), Card("A", "♦"), Card("Q", "♣"), Card("Q", "♠")])
+        assert fh1 != fh3
+        assert not (fh1 == fh3)
+        assert not (fh1 < fh3)
