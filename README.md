@@ -8,6 +8,23 @@ A desktop Poker game built with Python and PySide6, following the MVVM (Model-Vi
 
 ---
 
+## Table of Contents
+
+- [Features](#features)
+- [Gameplay Overview](#gameplay-overview)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [Testing](#testing)
+  - [Running Tests](#running-tests)
+  - [Test Structure](#test-structure)
+  - [Pytest Configuration](#pytest-configuration)
+  - [Writing New Tests](#writing-new-tests)
+- [Project Structure](#project-structure)
+- [Requirements](#requirements)
+- [License](#license)
+
+---
+
 ## Features
 
 - **Graphical User Interface**: Built with PySide6 and Qt Designer UI files.
@@ -160,43 +177,20 @@ from model.card import Card
 from model.hand import Hand
 
 def test_card_creation():
-    card = Card("Hearts", "Ace")
-    assert card.suit == "Hearts"
-    assert card.rank == "Ace"
+    card = Card("♥", "A")
+    assert card.suit == "♥"
+    assert card.rank == "A"
 ```
 
 ---
 
 ## Project Structure
 
-```
-poker_game_gui/
-  main.py
-  requirements.txt
-  model/
-  view/
-  viewmodel/
-  tests/
-  pytest.ini
-```
-
 - **model/**: Game logic, card/deck/hand/player classes
 - **view/**: UI files and main window logic
 - **viewmodel/**: ViewModel connecting UI and game logic
 - **tests/**: Unit tests for all game components
 
----
+```
 
-## Requirements
-
-- Python 3.10+
-- PySide6 (see requirements.txt)
-- Pytest (included in requirements.txt)
-
----
-
-## License
-
-MIT License
-
----
+```
