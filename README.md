@@ -190,7 +190,3 @@ def test_card_creation():
 - **view/**: UI files and main window logic
 - **viewmodel/**: ViewModel connecting UI and game logic
 - **tests/**: Unit tests for all game components
-
-```
-
-```
